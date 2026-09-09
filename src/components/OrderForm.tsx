@@ -1,7 +1,8 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { motion } from 'motion/react';
-import { CheckCircle2, Minus, Plus, ShieldCheck, Truck, Wallet } from 'lucide-react';
-import { product } from '../data/product';
+import { CheckCircle2, ShieldCheck, Truck, Wallet } from 'lucide-react';
+import { offers, product } from '../data/product';
+import OfferPicker from './OfferPicker';
 
 const inputClass =
   'w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-base font-medium transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-brand-cyan';
@@ -18,9 +19,9 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 export default function OrderForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [qty, setQty] = useState(1);
+  const [offer, setOffer] = useState(offers[0]);
 
-  const total = product.price * qty;
+  const total = offer.price;
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,7 +32,7 @@ export default function OrderForm() {
       phone: String(data.get('phone') ?? ''),
       city: String(data.get('city') ?? ''),
       address: String(data.get('address') ?? ''),
-      quantity: qty,
+      quantity: offer.qty,
       total,
     };
 
@@ -121,28 +122,7 @@ export default function OrderForm() {
                   />
                 </Field>
 
-                <div className="flex items-center justify-between rounded-2xl bg-gray-50 px-4 py-3">
-                  <span className="font-black">الكمية</span>
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      aria-label="نقص الكمية"
-                      onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="flex h-11 w-11 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-gray-200"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="w-8 text-center text-xl font-black">{qty}</span>
-                    <button
-                      type="button"
-                      aria-label="زيد الكمية"
-                      onClick={() => setQty((q) => Math.min(5, q + 1))}
-                      className="flex h-11 w-11 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-gray-200"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
+                <OfferPicker selected={offer} onSelect={setOffer} />
 
                 <div className="flex items-center justify-between rounded-2xl bg-brand-navy px-4 py-4 text-white">
                   <span className="text-sm font-bold sm:text-base">المجموع (التوصيل مجاني)</span>

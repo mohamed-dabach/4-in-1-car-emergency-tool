@@ -23,6 +23,46 @@ export const product = {
   },
 };
 
+export type Offer = {
+  qty: number;
+  price: number;
+  title: string;
+  desc: string;
+  badge?: string;
+  urgency: string;
+  popular?: boolean;
+};
+
+/** جوج عروض بلا زيادة — وحدة ولا جوج */
+export const offers: Offer[] = [
+  {
+    qty: 1,
+    price: 649,
+    title: 'جهاز واحد',
+    desc: 'للطوموبيل ديالك',
+    urgency: 'باقي شي كمية محدودة',
+  },
+  {
+    qty: 2,
+    price: 1099,
+    title: 'جوج أجهزة',
+    desc: 'وحد للطوموبيل وواحد هدية ولا لشي قريب',
+    badge: 'الأكثر طلباً',
+    urgency: 'العرض كيسالي ملي تسالي الكمية',
+    popular: true,
+  },
+];
+
+/** الثمن العادي ديال العرض قبل التخفيض */
+export function offerRegularPrice(offer: Offer) {
+  return product.price * offer.qty;
+}
+
+/** شحال كتوفر فهاد العرض */
+export function offerSaving(offer: Offer) {
+  return offerRegularPrice(offer) - offer.price;
+}
+
 export type Benefit = {
   num: string;
   icon: LucideIcon;

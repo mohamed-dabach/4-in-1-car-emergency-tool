@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Check, Flame, ShieldCheck, Truck, Wallet } from 'lucide-react';
-import { product, trustBadges } from '../data/product';
+import { offers, product, trustBadges } from '../data/product';
 import { CtaButton, Price } from './ui';
 
 const badgeIcons = [Truck, Wallet, ShieldCheck];
@@ -39,6 +39,10 @@ export default function Hero() {
           <div className="mt-5 flex flex-col items-center gap-4 lg:items-start">
             <Price size="lg" />
             <CtaButton className="w-full sm:w-auto">اطلب دابا — خلّص ملي يوصلك</CtaButton>
+            <p className="text-sm font-black text-brand-cyan">
+              خود جوج بـ {offers[1].price} {product.currency} وتوفّر{' '}
+              {product.price * 2 - offers[1].price} {product.currency}
+            </p>
           </div>
 
           <ul className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-1.5 lg:justify-start">

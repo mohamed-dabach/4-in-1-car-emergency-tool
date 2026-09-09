@@ -15,6 +15,7 @@ import Reviews from './components/Reviews';
 import Faq from './components/Faq';
 import OrderForm from './components/OrderForm';
 import StickyCta from './components/StickyCta';
+import SocialProofTicker from './components/SocialProofTicker';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
       </main>
       <Footer />
       <StickyCta />
+      <SocialProofTicker />
     </div>
   );
 }
