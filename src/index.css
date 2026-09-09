@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --font-cairo: "Cairo", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-navy: #0b192c;
+  --color-brand-yellow: #ffd700;
+  --color-brand-red: #e63946;
+  --color-brand-cyan: #00e5ff;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-cairo);
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
