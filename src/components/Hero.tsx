@@ -19,29 +19,29 @@ export default function Hero() {
           transition={{ duration: 0.5 }}
           className="order-2 text-center lg:order-1 lg:text-right"
         >
-          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-red/40 bg-brand-red/15 px-4 py-1.5 text-sm font-black text-red-300">
+          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-brand-red/40 bg-brand-red/15 px-4 py-1.5 text-sm font-black text-red-300">
             <Flame className="h-4 w-4" />
             عرض خاص — الكمية محدودة
           </span>
 
-          <h1 className="text-3xl leading-[1.25] font-black text-white sm:text-4xl lg:text-5xl">
+          <h1 className="text-[26px] leading-[1.3] font-black text-white sm:text-4xl lg:text-5xl">
             ما تبقاش عالق فالطريق
             <span className="mt-2 block text-brand-yellow">
               جهاز واحد يشعّل، ينفخ، يضوي ويشحن
             </span>
           </h1>
 
-          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg lg:mx-0">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-lg lg:mx-0">
             شعّال بطارية 1000A + كومپريسور 150 PSI + باور بانك + ضو LED. كلشي فجهاز
             صغير كيدخل فبوات الطوموبيل.
           </p>
 
-          <div className="mt-6 flex flex-col items-center gap-5 lg:items-start">
+          <div className="mt-5 flex flex-col items-center gap-4 lg:items-start">
             <Price size="lg" />
             <CtaButton className="w-full sm:w-auto">اطلب دابا — خلّص ملي يوصلك</CtaButton>
           </div>
 
-          <ul className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 lg:justify-start">
+          <ul className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-1.5 lg:justify-start">
             {trustBadges.map((badge, i) => {
               const Icon = badgeIcons[i] ?? Check;
               return (
@@ -60,7 +60,7 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="order-1 lg:order-2"
         >
-          <div className="relative mx-auto max-w-[260px] sm:max-w-sm lg:max-w-none">
+          <div className="relative mx-auto max-w-[220px] sm:max-w-sm lg:max-w-none">
             <div
               aria-hidden
               className="absolute inset-6 rounded-full bg-brand-cyan/25 blur-[70px]"
