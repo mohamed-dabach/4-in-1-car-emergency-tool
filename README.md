@@ -66,7 +66,10 @@ orders from arriving.
 
 - The phone number and order code are stored as text, so leading zeros survive.
 - The same phone and price posted twice within three minutes returns the first
-  order code instead of writing a duplicate row.
+  order code instead of writing a duplicate row. This relies on the hidden `ts`
+  column (N), which stores raw epoch milliseconds. Do not delete it: the visible
+  date column is returned by Sheets converted to the script timezone, which made
+  every row look hours old and defeated the check.
 - Columns `الحالة` and `ملاحظة` are yours to fill in by hand. The script never
   overwrites them.
 - If the POST fails, the customer is not shown a false success. They get a

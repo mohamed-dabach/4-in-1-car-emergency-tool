@@ -19,6 +19,9 @@
  *
  * ⚠️ ملي تبدل الكود: Deploy → Manage deployments → ✏️ → Version: New version
  * ماشي "New deployment" — هادي كتعطي URL جديد وكتحبس الطلبات.
+ *
+ * ⚠️ إلا زدتي شي عمود جديد (بحال 'ts'): شغّل setupSheet مرة أخرى قبل
+ * ما تدير New version، بلا هاد الشي العنوان ديال العمود كيبقى خاوي.
  */
 
 var TAB = 'الطلبات';
@@ -37,6 +40,7 @@ var HEADERS = [
   'المصدر', // K
   'الحالة', // L — كتعمرها أنت باليد
   'ملاحظة', // M — كتعمرها أنت باليد
+  'ts', // N — الوقت بالميلي ثانية، كنستعملوه باش نعرفو الطلب المكرر
 ];
 
 var COL_CODE = 1;
@@ -44,6 +48,7 @@ var COL_DATE = 2;
 var COL_PHONE = 4;
 var COL_PRICE = 10;
 var COL_STATUS = 12;
+var COL_TS = 14;
 var COL_COUNT = HEADERS.length;
 
 /** الحالات ديال الطلب — كيبانو كـ dropdown فعمود L */
@@ -120,8 +125,13 @@ function findRecentDuplicate(sheet, phone, price) {
 
   for (var i = rows.length - 1; i >= 0; i--) {
     var row = rows[i];
-    var when = row[COL_DATE - 1];
-    if (!(when instanceof Date) || when.getTime() < cutoff) continue;
+
+    /* كنقارنو بـ ts (رقم) ماشي بالتاريخ ديال الخانة: Sheets كيرجع التاريخ
+       محوّل لـ timezone ديال المشروع، وإلا كان مختلف على ديال الشيت كيبان
+       الصف قديم بساعات وما كيتقارنش أصلاً. الرقم ماعندو timezone. */
+    var ts = Number(row[COL_TS - 1]);
+    if (!ts || ts < cutoff) continue;
+
     if (String(row[COL_PHONE - 1]) === String(phone) && String(row[COL_PRICE - 1]) === String(price)) {
       return String(row[COL_CODE - 1]);
     }
@@ -160,6 +170,7 @@ function setupSheet() {
   });
 
   setupStatusColors();
+  sheet.hideColumns(COL_TS); // عمود تقني، ماشي للقراءة
   sheet.setRightToLeft(true);
   sheet.autoResizeColumns(1, COL_COUNT);
 
@@ -257,6 +268,7 @@ function doPost(e) {
       String(order.source || ''),
       'جديد',
       '',
+      now.getTime(),
     ]);
 
     var row = sheet.getLastRow();
@@ -271,4 +283,31 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * كتمسح صفوف الاختبار: كل صف السميّة ديالو كتبدا بـ "اختبار" ولا المصدر ديالو
+ * فيه "test". شغّلها من المحرر ملي تسالي التجارب — ما كتمسحش الطلبات الحقيقية.
+ */
+function deleteTestOrders() {
+  var sheet = sheetOrNull();
+  if (!sheet) throw new Error('التاب "' + TAB + '" ماكاينش');
+
+  var last = sheet.getLastRow();
+  if (last < 2) return;
+
+  var rows = sheet.getRange(2, 1, last - 1, COL_COUNT).getValues();
+  var removed = 0;
+
+  // من تحت لفوق باش أرقام الصفوف ما يتبدلوش ملي كنمسحو
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var name = String(rows[i][2] || '');
+    var source = String(rows[i][10] || '');
+    if (name.indexOf('اختبار') === 0 || source.indexOf('test') !== -1) {
+      sheet.deleteRow(i + 2);
+      removed++;
+    }
+  }
+
+  SpreadsheetApp.getActiveSpreadsheet().toast('تمسحو ' + removed + ' صف ديال الاختبار', 'تم', 6);
 }
