@@ -4,11 +4,15 @@ build/
 coverage/
 .DS_Store
 *.log
-.env*
+.env
+.env.local
+.env.*.local
 .vercel/
 .playwright-mcp/
 *.zip
 source-images/
 
 .vercel
-.env*
+.env
+.env.local
+.env.*.local

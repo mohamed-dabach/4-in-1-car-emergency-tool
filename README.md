@@ -32,11 +32,46 @@ optimized WebP assets in `public/images/` with:
 npm run images -- source-images
 ```
 
-## Order submission
+## Orders → Google Sheet
 
-`src/components/OrderForm.tsx` currently simulates the submission and logs the
-order payload to the console. The `TODO` in `handleSubmit` marks where to POST
-the order to a real backend (Google Sheet webhook, store API or WhatsApp link).
+Orders submitted on the page are POSTed to a Google Apps Script web app that
+appends one row per order to a spreadsheet.
+
+### One-time setup
+
+1. Create a new Google Sheet, then **Extensions → Apps Script**.
+2. Delete everything in `Code.gs` and paste all of
+   [`scripts/orders-apps-script.gs`](scripts/orders-apps-script.gs).
+3. Run the **`setupSheet`** function once from the editor. It creates the
+   `الطلبات` tab, the header row, the right-to-left layout, the status
+   dropdown and its colours. Approve the authorization prompt on first run.
+4. **Deploy → New deployment → Web app**, with *Execute as: Me* and
+   *Who has access: Anyone*. Copy the `/exec` URL.
+5. **Project Settings → Script Properties**, add `ORDERS_SECRET` with a
+   password of your choice, then append `?key=<that password>` to the URL.
+6. In Vercel, **Settings → Environment Variables**, add
+   `VITE_ORDERS_WEBHOOK` with the full URL, for Production and Preview, then
+   redeploy.
+
+Open the `/exec` URL in a browser to check the wiring: it answers
+`{"ok":true,...}` with the current order count.
+
+### When you edit the script
+
+Redeploy with **Deploy → Manage deployments → ✏️ → Version: New version**.
+Choosing *New deployment* instead mints a different URL and silently stops
+orders from arriving.
+
+### Behaviour worth knowing
+
+- The phone number and order code are stored as text, so leading zeros survive.
+- The same phone and price posted twice within three minutes returns the first
+  order code instead of writing a duplicate row.
+- Columns `الحالة` and `ملاحظة` are yours to fill in by hand. The script never
+  overwrites them.
+- If the POST fails, the customer is not shown a false success. They get a
+  WhatsApp button prefilled with their full order instead, so the sale is not
+  lost.
 
 ## Deploy
 

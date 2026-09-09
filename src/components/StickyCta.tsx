@@ -3,23 +3,25 @@ import { product } from '../data/product';
 import { scrollToOrder } from './ui';
 
 /**
- * Mobile-only sticky order bar. Appears once the hero is scrolled past and
- * hides again while the order form itself is on screen.
+ * شريط الطلب فالقاع (موبايل).
+ * كيختافى ملي: كتكون شي CTA أخرى باينة فالشاشة، ولا ملي توصل لاستمارة الطلب.
  */
 export default function StickyCta() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const order = document.getElementById('order');
+    const ctas = Array.from(document.querySelectorAll<HTMLElement>('[data-cta]'));
+
+    const isOnScreen = (el: HTMLElement, margin = 0) => {
+      const rect = el.getBoundingClientRect();
+      return rect.top < window.innerHeight - margin && rect.bottom > margin;
+    };
 
     const update = () => {
-      const pastHero = window.scrollY > 500;
-      let formVisible = false;
-      if (order) {
-        const rect = order.getBoundingClientRect();
-        formVisible = rect.top < window.innerHeight - 100 && rect.bottom > 0;
-      }
-      setVisible(pastHero && !formVisible);
+      const anyCtaVisible = ctas.some((el) => isOnScreen(el));
+      const formVisible = order ? isOnScreen(order, 80) : false;
+      setVisible(window.scrollY > 240 && !anyCtaVisible && !formVisible);
     };
 
     update();
@@ -46,13 +48,16 @@ export default function StickyCta() {
             <span className="text-sm font-bold text-slate-500 line-through">
               {product.oldPrice}
             </span>
+            <span className="rounded-md bg-brand-red px-1.5 py-0.5 text-[11px] font-black text-white">
+              -{product.discount}%
+            </span>
           </div>
-          <span className="text-xs font-bold text-slate-400">التوصيل مجاني</span>
+          <span className="text-xs font-bold text-slate-400">التوصيل مجاني · الدفع عند الاستلام</span>
         </div>
         <button
           type="button"
           onClick={scrollToOrder}
-          className="flex-1 rounded-xl bg-brand-red py-3.5 text-base font-black text-white shadow-lg transition-transform active:scale-[0.97]"
+          className="shrink-0 rounded-xl bg-brand-red px-6 py-3.5 text-base font-black text-white shadow-lg transition-transform active:scale-[0.97]"
         >
           اطلب دابا
         </button>

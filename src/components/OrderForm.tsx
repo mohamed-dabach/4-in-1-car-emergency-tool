@@ -2,7 +2,9 @@ import { useState, type FormEvent, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, ShieldCheck, Truck, Wallet } from 'lucide-react';
 import { offers, product } from '../data/product';
+import { WhatsappInlineLink, WhatsappFallbackLink } from './WhatsappButton';
 import OfferPicker from './OfferPicker';
+import { orderSource, submitOrder, type OrderPayload } from '../lib/submitOrder';
 
 const inputClass =
   'w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-base font-medium transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-brand-cyan';
@@ -19,31 +21,42 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 export default function OrderForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [orderCode, setOrderCode] = useState<string | null>(null);
+  const [failed, setFailed] = useState<OrderPayload | null>(null);
   const [offer, setOffer] = useState(offers[0]);
 
   const total = offer.price;
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const order = {
+    const order: OrderPayload = {
       product: product.name,
-      name: String(data.get('name') ?? ''),
-      phone: String(data.get('phone') ?? ''),
-      city: String(data.get('city') ?? ''),
-      address: String(data.get('address') ?? ''),
+      offer: offer.title,
+      name: String(data.get('name') ?? '').trim(),
+      phone: String(data.get('phone') ?? '').trim(),
+      city: String(data.get('city') ?? '').trim(),
+      address: String(data.get('address') ?? '').trim(),
       quantity: offer.qty,
       total,
+      source: orderSource(),
     };
 
     setIsSubmitting(true);
-    // TODO: send `order` to the real order backend (Google Sheet webhook, YouCan API
-    // or a WhatsApp deep link). The submission below is simulated on purpose.
-    console.log('order payload', order);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1200);
+    setFailed(null);
+
+    const result = await submitOrder(order);
+    setIsSubmitting(false);
+
+    if (!result.ok) {
+      // ما نضيعوش الطلب: كنبينو ليه واتساب معمّر بالمعلومات ديالو
+      console.error('order submission failed', result.error);
+      setFailed(order);
+      return;
+    }
+
+    setOrderCode(result.code ?? null);
+    setIsSuccess(true);
   };
 
   return (
@@ -65,6 +78,11 @@ export default function OrderForm() {
               <p className="text-base text-gray-600 sm:text-lg">
                 غادي نعيطو ليك قريب باش نأكدو الطلب والعنوان.
               </p>
+              {orderCode && (
+                <p className="mt-5 inline-block rounded-xl bg-gray-100 px-4 py-2 text-sm font-black text-gray-700">
+                  كود الطلب ديالك: <span dir="ltr">{orderCode}</span>
+                </p>
+              )}
             </motion.div>
           ) : (
             <>
@@ -133,6 +151,7 @@ export default function OrderForm() {
 
                 <button
                   type="submit"
+                  data-cta=""
                   disabled={isSubmitting}
                   className="flex w-full items-center justify-center gap-3 rounded-2xl bg-brand-red py-5 text-xl font-black text-white shadow-[0_10px_30px_-8px_rgba(230,57,70,0.8)] transition-transform duration-150 active:scale-[0.98] disabled:opacity-70 sm:text-2xl"
                 >
@@ -154,6 +173,7 @@ export default function OrderForm() {
                     <ShieldCheck className="h-4 w-4" /> ضمان
                   </li>
                 </ul>
+                {failed ? <WhatsappFallbackLink order={failed} /> : <WhatsappInlineLink />}
               </form>
             </>
           )}

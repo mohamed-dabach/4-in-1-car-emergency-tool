@@ -16,6 +16,7 @@ import Faq from './components/Faq';
 import OrderForm from './components/OrderForm';
 import StickyCta from './components/StickyCta';
 import SocialProofTicker from './components/SocialProofTicker';
+import WhatsappButton from './components/WhatsappButton';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
       <Footer />
       <StickyCta />
       <SocialProofTicker />
+      <WhatsappButton />
     </div>
   );
 }
