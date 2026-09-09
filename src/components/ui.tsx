@@ -71,8 +71,36 @@ export function Price({ size = 'md' }: { size?: 'md' | 'lg' }) {
   );
 }
 
+/**
+ * كيهبط للاستمارة وكيوقف فين الخانات باينين، ماشي غير العنوان.
+ * كنستهدفو <form> بنفسو ماشي القسم كامل، باش أول خانة تكون فوق فالشاشة.
+ */
 export function scrollToOrder() {
-  document.getElementById('order')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const section = document.getElementById('order');
+  if (!section) return;
+
+  // شوية ديال البلاصة فوق باش يبان راس البطاقة البيضا ويعرف فين وصل
+  const offset = 56;
+  const target = () => section.querySelector('form') ?? section;
+
+  const go = (behavior: ScrollBehavior) => {
+    const top = target().getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior });
+  };
+
+  go('smooth');
+
+  /* الصور لي كيتشدو lazy كيتحملو وحنا هابطين وكيزيدو فطول الصفحة، فالبلاصة
+     لي حسبنا كتولي غالطة بمئات ديال البيكسل. كنعاودو نقيسو من بعد ونصححو. */
+  let tries = 0;
+  const settle = () => {
+    tries += 1;
+    const drift = target().getBoundingClientRect().top - offset;
+    if (Math.abs(drift) > 24) go(tries > 2 ? 'auto' : 'smooth');
+    if (tries < 5) window.setTimeout(settle, 320);
+  };
+
+  window.setTimeout(settle, 420);
 }
 
 export function CtaButton({
