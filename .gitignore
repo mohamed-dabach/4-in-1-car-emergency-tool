@@ -16,3 +16,7 @@ source-images/
 .env
 .env.local
 .env.*.local
+
+# local agent tooling, not part of the site
+.mcp.json
+.claude/
