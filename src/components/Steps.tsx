@@ -1,4 +1,5 @@
-import { steps } from '../data/product';
+import { ShieldAlert } from 'lucide-react';
+import { steps, safetyTips } from '../data/product';
 import { Section, SectionHeading } from './ui';
 
 export default function Steps() {
@@ -19,6 +20,24 @@ export default function Steps() {
             </li>
           ))}
         </ol>
+
+        <div className="mt-10 rounded-2xl border border-brand-yellow/25 bg-brand-yellow/[0.07] px-5 py-5">
+          <h3 className="mb-3 flex items-center gap-2 text-base font-black text-brand-yellow sm:text-lg">
+            <ShieldAlert className="h-5 w-5 shrink-0" />
+            نصائح السلامة
+          </h3>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {safetyTips.map((tip) => (
+              <li
+                key={tip}
+                className="flex items-start gap-2 text-sm font-bold text-slate-200 sm:text-base"
+              >
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-yellow" />
+                {tip}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </Section>
   );

@@ -3,7 +3,9 @@ import Hero from './components/Hero';
 import Benefits from './components/Benefits';
 import PainPoints from './components/PainPoints';
 import Compatibility from './components/Compatibility';
+import Comparison from './components/Comparison';
 import Features from './components/Features';
+import InflationGuide from './components/InflationGuide';
 import Safety from './components/Safety';
 import InTheBox from './components/InTheBox';
 import RealPhotos from './components/RealPhotos';
@@ -23,8 +25,10 @@ export default function App() {
         <Hero />
         <Benefits />
         <PainPoints />
+        <Comparison />
         <Features />
         <Compatibility />
+        <InflationGuide />
         <Safety />
         <InTheBox />
         <RealPhotos />
