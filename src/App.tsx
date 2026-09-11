@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import AnnounceBar from './components/AnnounceBar';
 import Hero from './components/Hero';
 import Benefits from './components/Benefits';
@@ -18,8 +19,20 @@ import StickyCta from './components/StickyCta';
 import SocialProofTicker from './components/SocialProofTicker';
 import WhatsappButton from './components/WhatsappButton';
 import Footer from './components/Footer';
+import { product } from './data/product';
+import { trackViewContent } from './lib/metaEvents';
+import { useScrollDepth, useTimeOnPage, useExitIntent, useSectionViews } from './lib/useEngagement';
 
 export default function App() {
+  useScrollDepth();
+  useTimeOnPage();
+  useExitIntent();
+  useSectionViews();
+
+  useEffect(() => {
+    trackViewContent(product.price);
+  }, []);
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-brand-navy text-white selection:bg-brand-yellow selection:text-brand-navy">
       <AnnounceBar />

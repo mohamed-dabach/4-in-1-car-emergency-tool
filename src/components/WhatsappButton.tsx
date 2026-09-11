@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { whatsappEnabled, whatsappLink } from '../data/contact';
+import { trackContact } from '../lib/metaEvents';
 
 /** أيقونة واتساب — SVG باش ما نزيدوش مكتبة أخرى */
 function WhatsappIcon({ className = '' }: { className?: string }) {
@@ -41,6 +42,7 @@ export default function WhatsappButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="سولنا على واتساب"
+      onClick={() => trackContact('whatsapp')}
       className="fixed bottom-24 left-3 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_25px_-6px_rgba(37,211,102,0.8)] transition-transform duration-150 hover:scale-105 active:scale-95 lg:bottom-6 lg:left-6 lg:h-16 lg:w-16"
     >
       <WhatsappIcon className="h-7 w-7 lg:h-8 lg:w-8" />
@@ -58,6 +60,7 @@ export function WhatsappInlineLink() {
       href={whatsappLink('سلام 👋 عندي سؤال على جهاز الطوارئ 4 فـ1 قبل ما نطلب')}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackContact('whatsapp')}
       className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#25D366] bg-[#25D366]/10 py-3.5 text-base font-black text-[#128C4A] transition-colors hover:bg-[#25D366]/20"
     >
       <WhatsappIcon className="h-5 w-5" />
@@ -101,6 +104,7 @@ export function WhatsappFallbackLink({
           href={whatsappLink(message)}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackContact('whatsapp')}
           className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] py-3.5 text-base font-black text-white"
         >
           <WhatsappIcon className="h-5 w-5" />

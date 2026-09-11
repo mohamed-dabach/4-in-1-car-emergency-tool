@@ -1,10 +1,18 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, ShieldCheck, Truck, Wallet } from 'lucide-react';
 import { offers, product } from '../data/product';
 import { WhatsappInlineLink, WhatsappFallbackLink } from './WhatsappButton';
 import OfferPicker from './OfferPicker';
 import { orderSource, submitOrder, type OrderPayload } from '../lib/submitOrder';
+import {
+  setAdvancedMatching,
+  trackAddToCart,
+  trackFormError,
+  trackFormStarted,
+  trackFormSubmitted,
+  trackPurchase,
+} from '../lib/metaEvents';
 
 const inputClass =
   'w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-base font-medium transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-brand-cyan';
@@ -27,6 +35,15 @@ export default function OrderForm() {
 
   const total = offer.price;
 
+  // Meta "AddToCart" — fires on the default pack and again on every change,
+  // debounced slightly so it doesn't compete with first paint.
+  useEffect(() => {
+    const t = setTimeout(() => trackAddToCart({ quantity: offer.qty, value: offer.price }), 600);
+    return () => clearTimeout(t);
+  }, [offer]);
+
+  const handleFieldFocus = (field: string) => trackFormStarted(field);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -45,22 +62,40 @@ export default function OrderForm() {
     setIsSubmitting(true);
     setFailed(null);
 
+    // Hand the typed contact details to Meta advanced matching before the
+    // conversion event fires, so Purchase can be matched to a real account.
+    setAdvancedMatching({ fullName: order.name, phone: order.phone, city: order.city });
+    trackFormSubmitted({ quantity: order.quantity, value: order.total });
+
     const result = await submitOrder(order);
     setIsSubmitting(false);
 
     if (!result.ok) {
       // ما نضيعوش الطلب: كنبينو ليه واتساب معمّر بالمعلومات ديالو
       console.error('order submission failed', result.error);
+      trackFormError(result.error);
       setFailed(order);
       return;
     }
 
     setOrderCode(result.code ?? null);
     setIsSuccess(true);
+    // COD order confirmed — this is the actual conversion for a landing page
+    // with no separate payment step, so Purchase fires right here.
+    trackPurchase({
+      value: order.total,
+      numItems: order.quantity,
+      orderId: result.code ?? crypto.randomUUID(),
+      contentName: order.offer,
+    });
   };
 
   return (
-    <section id="order" className="scroll-mt-4 px-4 py-12 sm:px-6 sm:py-16 lg:py-24">
+    <section
+      id="order"
+      data-analytics-section="order"
+      className="scroll-mt-4 px-4 py-12 sm:px-6 sm:py-16 lg:py-24"
+    >
       <div className="mx-auto w-full max-w-2xl overflow-hidden rounded-3xl bg-white text-brand-navy shadow-2xl">
         <div className="h-2 w-full bg-gradient-to-l from-brand-red via-brand-yellow to-brand-cyan" />
 
@@ -102,6 +137,7 @@ export default function OrderForm() {
                     autoComplete="name"
                     placeholder="مثلا: محمد العلوي"
                     className={inputClass}
+                    onFocus={() => handleFieldFocus('name')}
                   />
                 </Field>
 
@@ -115,6 +151,7 @@ export default function OrderForm() {
                     autoComplete="tel"
                     placeholder="06 XX XX XX XX"
                     className={`${inputClass} text-right`}
+                    onFocus={() => handleFieldFocus('phone')}
                   />
                 </Field>
 

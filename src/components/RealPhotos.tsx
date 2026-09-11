@@ -30,7 +30,9 @@ export default function RealPhotos() {
         ))}
       </div>
       <div className="mt-8 text-center">
-        <CtaButton>بغيت نطلب واحد</CtaButton>
+        <CtaButton location="real_photos" label="بغيت نطلب واحد">
+          بغيت نطلب واحد
+        </CtaButton>
       </div>
     </Section>
   );

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { product } from '../data/product';
+import { trackCheckoutClick, trackInitiateCheckout } from '../lib/metaEvents';
 
 export function Section({
   id,
@@ -11,7 +12,11 @@ export function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={`px-4 py-12 sm:px-6 sm:py-16 lg:py-24 ${className}`}>
+    <section
+      id={id}
+      data-analytics-section={id}
+      className={`px-4 py-12 sm:px-6 sm:py-16 lg:py-24 ${className}`}
+    >
       <div className="mx-auto w-full max-w-6xl">{children}</div>
     </section>
   );
@@ -107,16 +112,26 @@ export function CtaButton({
   children,
   className = '',
   onClick = scrollToOrder,
+  location = 'hero',
+  label = 'اطلب دابا',
 }: {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  location?: 'hero' | 'real_photos' | 'offer_picker';
+  label?: string;
 }) {
+  const handleClick = () => {
+    trackCheckoutClick({ buttonLocation: location, buttonName: label, price: product.price });
+    trackInitiateCheckout({ value: product.price, numItems: 1 });
+    onClick();
+  };
+
   return (
     <button
       type="button"
       data-cta=""
-      onClick={onClick}
+      onClick={handleClick}
       className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-red px-6 py-4 text-lg font-black text-white shadow-[0_10px_30px_-8px_rgba(230,57,70,0.8)] transition-transform duration-150 active:scale-[0.97] sm:w-auto sm:px-10 sm:text-xl ${className}`}
     >
       {children}

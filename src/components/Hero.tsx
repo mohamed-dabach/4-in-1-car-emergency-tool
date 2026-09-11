@@ -7,7 +7,10 @@ const badgeIcons = [Truck, Wallet, ShieldCheck];
 
 export default function Hero() {
   return (
-    <header className="relative overflow-hidden px-4 pt-5 pb-10 sm:px-6 sm:pt-12 lg:pt-16 lg:pb-20">
+    <header
+      data-analytics-section="hero"
+      className="relative overflow-hidden px-4 pt-5 pb-10 sm:px-6 sm:pt-12 lg:pt-16 lg:pb-20"
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-brand-cyan/20 blur-[110px]"
@@ -38,7 +41,13 @@ export default function Hero() {
 
           <div className="mt-5 flex flex-col items-center gap-4 lg:items-start">
             <Price size="lg" />
-            <CtaButton className="w-full sm:w-auto">اطلب دابا — خلّص ملي يوصلك</CtaButton>
+            <CtaButton
+              className="w-full sm:w-auto"
+              location="hero"
+              label="اطلب دابا — خلّص ملي يوصلك"
+            >
+              اطلب دابا — خلّص ملي يوصلك
+            </CtaButton>
             <p className="text-sm font-black text-brand-cyan">
               خود جوج بـ {offers[1].price} {product.currency} وتوفّر{' '}
               {product.price * 2 - offers[1].price} {product.currency}
