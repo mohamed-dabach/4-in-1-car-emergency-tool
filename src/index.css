@@ -34,3 +34,33 @@ img {
     transform: translateY(0) scale(1);
   }
 }
+
+/* نبضة ديال أزرار الطلب — بحال الحلقة لي كتخرج من زر واتساب العايم، ولكن
+   بـ box-shadow حيت الأزرار مستطيلة: عنصر كيكبر بحال animate-ping كيبان
+   ضخم بزاف. الظل الأول هو نفسو لي فالزر باش ما يضيعش ملي كتخدم الأنيميشن. */
+@keyframes ctaPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 30px -8px rgba(230, 57, 70, 0.8),
+      0 0 0 0 rgba(255, 215, 0, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 10px 30px -8px rgba(230, 57, 70, 0.8),
+      0 0 0 14px rgba(255, 215, 0, 0);
+  }
+}
+
+.cta-pulse {
+  /* نفس الظل ديال الأنيميشن — باش يبقى الزر بالظل ديالو حتى إلا توقفات
+     الحركة (prefers-reduced-motion). */
+  box-shadow: 0 10px 30px -8px rgba(230, 57, 70, 0.8);
+  animation: ctaPulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-pulse {
+    animation: none;
+  }
+}

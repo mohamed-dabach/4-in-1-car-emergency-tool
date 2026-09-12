@@ -62,7 +62,7 @@ export default function StickyCta() {
             trackInitiateCheckout({ value: product.price, numItems: 1 });
             scrollToOrder();
           }}
-          className="shrink-0 rounded-xl bg-brand-red px-6 py-3.5 text-base font-black text-white shadow-lg transition-transform active:scale-[0.97]"
+          className="cta-pulse shrink-0 rounded-xl bg-brand-red px-6 py-3.5 text-base font-black text-white transition-transform active:scale-[0.97]"
         >
           اطلب دابا
         </button>

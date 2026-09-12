@@ -132,7 +132,7 @@ export function CtaButton({
       type="button"
       data-cta=""
       onClick={handleClick}
-      className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-red px-6 py-4 text-lg font-black text-white shadow-[0_10px_30px_-8px_rgba(230,57,70,0.8)] transition-transform duration-150 active:scale-[0.97] sm:w-auto sm:px-10 sm:text-xl ${className}`}
+      className={`cta-pulse inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-red px-6 py-4 text-lg font-black text-white transition-transform duration-150 active:scale-[0.97] sm:w-auto sm:px-10 sm:text-xl ${className}`}
     >
       {children}
     </button>

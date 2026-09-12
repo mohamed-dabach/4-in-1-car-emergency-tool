@@ -2,12 +2,14 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, ShieldCheck, Truck, Wallet } from 'lucide-react';
 import { offers, product } from '../data/product';
-import { WhatsappInlineLink, WhatsappFallbackLink } from './WhatsappButton';
+import { whatsappEnabled, whatsappLink } from '../data/contact';
+import { WhatsappIcon, WhatsappInlineLink, WhatsappFallbackLink } from './WhatsappButton';
 import OfferPicker from './OfferPicker';
 import { orderSource, submitOrder, type OrderPayload } from '../lib/submitOrder';
 import {
   setAdvancedMatching,
   trackAddToCart,
+  trackContact,
   trackFormError,
   trackFormStarted,
   trackFormSubmitted,
@@ -111,12 +113,33 @@ export default function OrderForm() {
               </div>
               <h2 className="mb-2 text-2xl font-black sm:text-3xl">تسجل الطلب ديالك!</h2>
               <p className="text-base text-gray-600 sm:text-lg">
-                غادي نعيطو ليك قريب باش نأكدو الطلب والعنوان.
+                شكراً! الطلب ديالك تسجّل مزيان.
               </p>
               {orderCode && (
                 <p className="mt-5 inline-block rounded-xl bg-gray-100 px-4 py-2 text-sm font-black text-gray-700">
-                  كود الطلب ديالك: <span dir="ltr">{orderCode}</span>
+                  رقم الطلب: <span dir="ltr">{orderCode}</span>
                 </p>
+              )}
+
+              {/* خاص الزبون هو لي يبدا الدرشة: الرسالة لي كتجي منو كتحل نافدة
+                  24 ساعة فواتساب، وهي لي كتخلينا نجاوبوه بلا ما نعيطو ليه. */}
+              {orderCode && whatsappEnabled && (
+                <div className="mx-auto mt-6 max-w-sm rounded-2xl border-2 border-[#25D366] bg-[#25D366]/10 p-4">
+                  <p className="text-sm font-bold text-gray-700">
+                    أكّد الطلب ف واتساب وما غاديش نحتاجو نعيّطو ليك — غادي تكون دغيا. وإلا خلّي
+                    التيليفون قريب منك.
+                  </p>
+                  <a
+                    href={whatsappLink(`سلام 👋 الطلب ديالي: ${orderCode}`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackContact('whatsapp')}
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] py-3.5 text-base font-black text-white transition-transform active:scale-[0.98]"
+                  >
+                    <WhatsappIcon className="h-5 w-5" />
+                    أكّد ف واتساب
+                  </a>
+                </div>
               )}
             </motion.div>
           ) : (
