@@ -61,7 +61,10 @@ export default function SocialProofTicker() {
     <aside
       aria-label="إشعار طلب جديد"
       aria-live="polite"
-      className="fixed right-3 bottom-24 z-40 flex w-[min(20rem,calc(100vw-1.5rem))] animate-[fadeInUp_0.3s_ease-out] items-center gap-3 rounded-2xl border border-brand-yellow/40 bg-slate-900/95 p-3 shadow-2xl shadow-brand-yellow/10 backdrop-blur-md lg:right-6 lg:bottom-6"
+      /* 5.5rem = البلاصة ديال زر واتساب العايم على ليسار (12px + 56px + فرجة):
+         ملي كيطلع الشريط ديال القاع، الزر كيجي فنفس السطر مع هاد الإشعار.
+         100% ماشي 100vw: هادي كتحسب بلا سكرول بار، فالحساب كيجي مضبوط. */
+      className="fixed right-3 bottom-24 z-40 flex w-[min(20rem,calc(100%-5.5rem))] animate-[fadeInUp_0.3s_ease-out] items-center gap-3 rounded-2xl border border-brand-yellow/40 bg-slate-900/95 p-3 shadow-2xl shadow-brand-yellow/10 backdrop-blur-md lg:right-6 lg:bottom-6"
     >
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-yellow/20 text-brand-yellow">
         <ShoppingBag className="h-5 w-5" />
