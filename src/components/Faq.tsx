@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { faq } from '../data/product';
+import { trackFaqOpen } from '../lib/metaEvents';
 import { Section, SectionHeading } from './ui';
 
 export default function Faq() {
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <Section id="faq" className="pt-0">
-      <SectionHeading eyebrow="أسئلة" title="أسئلة كيطرحوها بزاف ديال الناس" />
+    <Section id="faq">
+      <SectionHeading eyebrow="قبل ما تطلب" title="الأسئلة المهمة" />
       <div className="mx-auto max-w-3xl space-y-3">
         {faq.map((item, i) => {
           const isOpen = open === i;
@@ -20,8 +21,9 @@ export default function Faq() {
               <button
                 type="button"
                 aria-expanded={isOpen}
-                onClick={() => setOpen(isOpen ? null : i)}
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-right"
+                aria-controls={`faq-answer-${i}`}
+                onClick={() => { setOpen(isOpen ? null : i); if (!isOpen) trackFaqOpen(item.q, i); }}
+                className="flex min-h-14 w-full items-center justify-between gap-4 px-5 py-4 text-right focus-visible:outline-3 focus-visible:outline-inset focus-visible:outline-brand-yellow"
               >
                 <span className="text-base font-black text-white sm:text-lg">{item.q}</span>
                 <ChevronDown
@@ -31,7 +33,7 @@ export default function Faq() {
                 />
               </button>
               {isOpen && (
-                <p className="px-5 pb-4 text-sm leading-relaxed text-slate-300 sm:text-base">
+                <p id={`faq-answer-${i}`} className="px-5 pb-4 text-sm leading-7 text-slate-300 sm:text-base">
                   {item.a}
                 </p>
               )}

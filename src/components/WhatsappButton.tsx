@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { whatsappEnabled, whatsappLink } from '../data/contact';
 import { trackContact } from '../lib/metaEvents';
 
@@ -13,49 +12,7 @@ export function WhatsappIcon({ className = '' }: { className?: string }) {
 
 /** زر واتساب عايم فالقاع على اليسار */
 export default function WhatsappButton() {
-  const [formInView, setFormInView] = useState(false);
-  const [stickyBarUp, setStickyBarUp] = useState(false);
-
-  // ما نغطيوش استمارة الطلب — تما كاين لينك واتساب داخلي
-  useEffect(() => {
-    const order = document.getElementById('order');
-    if (!order) return;
-
-    const sticky = document.querySelector('[data-testid="sticky-cta"]');
-
-    /* الشريط ديال القاع كيطلع ويهبط بـ translate، والحركة كتاخد 300ms — فإلا
-       قِسنا البلاصة ديالو فوقت ديال scroll كنقراوه وهو باقي فالطريق. عوض هادشي
-       كنتبعو الكلاس لي كيبدل: كيتقلب بحال بحال مع الشريط فنفس اللحظة.
-       الطول 0 = مخبّع فالديسكتوب (lg:hidden)، وتما الزر كيبقى فالقاع. */
-    const readSticky = () => {
-      const up =
-        !!sticky &&
-        sticky.getBoundingClientRect().height > 0 &&
-        !sticky.className.includes('translate-y-full');
-      setStickyBarUp(up);
-    };
-
-    const update = () => {
-      const rect = order.getBoundingClientRect();
-      setFormInView(rect.top < window.innerHeight && rect.bottom > 0);
-      readSticky();
-    };
-
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-
-    const observer = sticky ? new MutationObserver(readSticky) : null;
-    observer?.observe(sticky!, { attributes: true, attributeFilter: ['class'] });
-
-    return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
-      observer?.disconnect();
-    };
-  }, []);
-
-  if (!whatsappEnabled || formInView) return null;
+  if (!whatsappEnabled) return null;
 
   return (
     <a
@@ -64,9 +21,7 @@ export default function WhatsappButton() {
       rel="noopener noreferrer"
       aria-label="سولنا على واتساب"
       onClick={() => trackContact('whatsapp')}
-      className={`fixed left-3 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_25px_-6px_rgba(37,211,102,0.8)] transition-all duration-300 hover:scale-105 active:scale-95 lg:bottom-6 lg:left-6 lg:h-16 lg:w-16 ${
-        stickyBarUp ? 'bottom-24' : 'bottom-5'
-      }`}
+      className="fixed bottom-6 left-6 z-40 hidden h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_25px_-6px_rgba(37,211,102,0.7)] transition duration-200 hover:scale-105 active:scale-95 lg:flex"
     >
       <WhatsappIcon className="h-7 w-7 lg:h-8 lg:w-8" />
     </a>

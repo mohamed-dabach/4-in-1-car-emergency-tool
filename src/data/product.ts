@@ -16,21 +16,16 @@ export const product = {
   name: 'جهاز الطوارئ 4 فـ1',
   tagline: 'يشعّل · ينفخ · يضوي · يشحن',
   price: 649,
-  oldPrice: 799,
+  originalPrice: 750,
   currency: 'د.م',
-  get discount() {
-    return Math.round((1 - this.price / this.oldPrice) * 100);
-  },
 };
 
 export type Offer = {
   qty: number;
   price: number;
+  originalPrice?: number;
   title: string;
   desc: string;
-  badge?: string;
-  urgency: string;
-  popular?: boolean;
 };
 
 /** جوج عروض بلا زيادة — وحدة ولا جوج */
@@ -38,30 +33,18 @@ export const offers: Offer[] = [
   {
     qty: 1,
     price: 649,
+    originalPrice: 750,
     title: 'جهاز واحد',
     desc: 'للطوموبيل ديالك',
-    urgency: 'باقي شي كمية محدودة',
   },
   {
     qty: 2,
     price: 1099,
+    originalPrice: 1500,
     title: 'جوج أجهزة',
     desc: 'وحد للطوموبيل وواحد هدية ولا لشي قريب',
-    badge: 'الأكثر طلباً',
-    urgency: 'العرض كيسالي ملي تسالي الكمية',
-    popular: true,
   },
 ];
-
-/** الثمن العادي ديال العرض قبل التخفيض */
-export function offerRegularPrice(offer: Offer) {
-  return product.price * offer.qty;
-}
-
-/** شحال كتوفر فهاد العرض */
-export function offerSaving(offer: Offer) {
-  return offerRegularPrice(offer) - offer.price;
-}
 
 export type Benefit = {
   num: string;
@@ -240,14 +223,8 @@ export const comparison: { label: string; one: string; many: string }[] = [
   { label: 'وقت الطوارئ', one: 'كلشي فيدك دغيا', many: 'كتقلب فين حطيتي كل حاجة' },
 ];
 
-/** عينات — بدّلهم بتقييمات حقيقية ديال الزبناء ديالك */
-export const reviews = [
-  { name: 'يونس', city: 'الدار البيضاء', text: 'البطارية ماتت ليا فالپاركينگ الصباح. شعّلت من أول مرة. الجهاز ديما معايا فالبوات.', stars: 5 },
-  { name: 'خديجة', city: 'الرباط', text: 'كنستعملو حيت كنخاف نبقى وحدي فالطريق. النفخ ديال العجلات ساهل بزاف وكيحبس بوحدو.', stars: 5 },
-  { name: 'مهدي', city: 'مراكش', text: 'شريتو للطوموبيل ديال الخدمة. جودة مزيانة والحجم صغير. التوصيل جا فيومين.', stars: 5 },
-  { name: 'رشيد', city: 'طنجة', text: 'خدام مزيان مع الديزل ديالي. الشاشة واضحة وكاين ضو قوي للليل.', stars: 4 },
-  { name: 'سناء', city: 'أكادير', text: 'خدمة زوينة، خلصت ملي وصلني الكولي. غير كنتمنى الساك يكون كبر شوية.', stars: 5 },
-];
+export type ProductReview = { name: string; city: string; text: string; stars: number };
+export const reviews: ProductReview[] = [];
 
 export const faq = [
   {
@@ -259,8 +236,8 @@ export const faq = [
     a: 'من 24 حتى 72 ساعة حسب المدينة. التوصيل مجاني لجميع مدن المغرب.',
   },
   {
-    q: 'واش كيشعّل الطوموبيلات ديال الديزل؟',
-    a: 'إيه. كيشعّل البنزين حتى 6.0L والديزل حتى 3.0L — يعني أغلبية الطوموبيلات والفانات.',
+    q: 'واش مناسب للطوموبيل ديالي؟',
+    a: 'الجهاز مخصص لبطاريات 12V. قبل الاستعمال راجع دليل السيارة والجهاز، وإلا ما كنتيش متأكد صيفط لينا موديل الطوموبيل فواتساب.',
   },
   {
     q: 'شحال كيبقى شارج؟',
@@ -268,11 +245,15 @@ export const faq = [
   },
   {
     q: 'واش صعيب الاستعمال؟',
-    a: 'لا. الپنس ذكي وعندو ضو كيقولك واش التوصيل صحيح. حتى لا عكستي الأسلاك كيحبس بوحدو وما كيوقع والو.',
+    a: 'الجهاز كيجي مع پنس ذكي ومؤشرات، ولكن خاصك تتبع ترتيب الربط وتعليمات السلامة المكتوبة فالدليل قبل كل استعمال.',
   },
   {
     q: 'واش كاين ضمان؟',
     a: 'إيه، كاين ضمان على العيوب ديال الصنع. إلا وصلك الجهاز خاسر ولا ماخدامش، عاود صيفطو وحنا نبدلوه ليك.',
+  },
+  {
+    q: 'شحال خاصني ندير فضغط العجلة؟',
+    a: 'استعمل غير الضغط لي كاتوصي به الشركة المصنعة ديال السيارة ولا العجلة. غالباً كاتلقاه مكتوب فباب السائق ولا فدليل السيارة.',
   },
 ];
 

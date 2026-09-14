@@ -98,8 +98,6 @@ export function useExitIntent() {
   }, []);
 }
 
-// One IntersectionObserver over every [data-analytics-section] element,
-// rather than one per section component.
 export function useSectionViews() {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>('[data-analytics-section]');
@@ -113,7 +111,7 @@ export function useSectionViews() {
           if (section) trackSectionViewed(section);
         }
       },
-      { threshold: 0.5 },
+      { rootMargin: '-20% 0px -65% 0px', threshold: 0 },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();

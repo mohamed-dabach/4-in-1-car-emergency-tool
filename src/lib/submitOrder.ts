@@ -11,7 +11,7 @@ export type OrderPayload = {
 };
 
 export type OrderResult =
-  | { ok: true; code?: string; simulated?: boolean }
+  | { ok: true; code: string }
   | { ok: false; error: string };
 
 /** URL ديال Google Apps Script — كيتحط ف Vercel كـ VITE_ORDERS_WEBHOOK */
@@ -23,11 +23,13 @@ export const ordersWebhookConfigured = Boolean(endpoint);
 export function orderSource() {
   if (typeof window === 'undefined') return '';
   const params = new URLSearchParams(window.location.search);
-  const utm = ['utm_source', 'utm_medium', 'utm_campaign']
-    .map((k) => params.get(k))
-    .filter(Boolean)
-    .join(' / ');
-  return utm || document.referrer || 'direct';
+  const attributionKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'];
+  const attribution = attributionKeys
+    .map((key) => [key, params.get(key)] as const)
+    .filter((entry): entry is readonly [string, string] => Boolean(entry[1]))
+    .map(([key, value]) => `${key}=${value}`)
+    .join(' | ');
+  return attribution || document.referrer || 'direct';
 }
 
 /**
@@ -38,26 +40,35 @@ export function orderSource() {
  */
 export async function submitOrder(order: OrderPayload): Promise<OrderResult> {
   if (!endpoint) {
-    // ما تنساش تحط VITE_ORDERS_WEBHOOK — بلاها الطلب كيتسجل غير فالكونسول
-    console.warn('VITE_ORDERS_WEBHOOK is not set — order not sent', order);
-    return { ok: true, simulated: true };
+    return { ok: false, error: 'not_configured' };
   }
 
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 12000);
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(order),
       redirect: 'follow',
+      signal: controller.signal,
     });
 
     if (!response.ok) return { ok: false, error: `http_${response.status}` };
 
     const data = (await response.json()) as { ok?: boolean; code?: string; error?: string };
     if (!data.ok) return { ok: false, error: data.error || 'rejected' };
+    if (!data.code || !/^CET-\d{6}-\d{3,}$/.test(data.code)) {
+      return { ok: false, error: 'missing_order_code' };
+    }
 
     return { ok: true, code: data.code };
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      return { ok: false, error: 'timeout' };
+    }
     return { ok: false, error: error instanceof Error ? error.message : 'network_error' };
+  } finally {
+    window.clearTimeout(timeout);
   }
 }

@@ -42,6 +42,8 @@ type EventKind = 'track' | 'trackCustom';
 
 function send(kind: EventKind, event: string, params: Record<string, unknown>, eventId?: string) {
   if (typeof window === 'undefined' || !window.fbq) return;
+  const search = new URLSearchParams(window.location.search);
+  if (import.meta.env.DEV || search.get('preview') === '1' || search.get('test') === '1') return;
 
   const payload: Record<string, unknown> = { ...params, page: window.location.pathname };
   for (const key of Object.keys(payload)) {
@@ -132,8 +134,8 @@ export function trackViewContent(value: number) {
   });
 }
 
-export function trackAddToCart(params: { quantity: number; value: number }) {
-  send('track', 'AddToCart', {
+export function trackOfferSelected(params: { quantity: number; value: number }) {
+  send('trackCustom', 'OfferSelected', {
     quantity: params.quantity,
     num_items: params.quantity,
     content_ids: [CONTENT_ID],
@@ -156,6 +158,7 @@ export function trackInitiateCheckout(params: { value: number; numItems?: number
 }
 
 export function trackPurchase(params: { value: number; numItems: number; orderId: string; contentName: string }) {
+  if (!once(`Purchase:${params.orderId}`)) return;
   send(
     'track',
     'Purchase',
@@ -224,8 +227,8 @@ export function trackFormStarted(field: string) {
   send('trackCustom', 'FormStarted', { form_name: 'order_form', field });
 }
 
-export function trackFormSubmitted(params: { quantity: number; value: number }) {
-  send('trackCustom', 'FormSubmitted', { form_name: 'order_form', quantity: params.quantity, value: params.value });
+export function trackFormSubmitAttempt(params: { quantity: number; value: number }) {
+  send('trackCustom', 'FormSubmitAttempt', { form_name: 'order_form', quantity: params.quantity, value: params.value });
 }
 
 export function trackFormError(errorReason: string) {

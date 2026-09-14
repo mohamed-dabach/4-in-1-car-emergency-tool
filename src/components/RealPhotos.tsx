@@ -1,4 +1,5 @@
 import { Section, SectionHeading, CtaButton } from './ui';
+import ImageLightbox from './ImageLightbox';
 
 const shots = [
   { src: '/images/real-box-1.webp', alt: 'الجهاز والكولي ديالو فالمحل' },
@@ -16,17 +17,23 @@ export default function RealPhotos() {
       />
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {shots.map((s, i) => (
-          <img
+          <ImageLightbox
             key={s.src}
             src={s.src}
             alt={s.alt}
-            loading="lazy"
-            width={1200}
-            height={1200}
-            className={`aspect-square w-full rounded-2xl border border-white/10 object-cover ${
-              i === 2 ? 'col-span-2 aspect-video lg:col-span-1 lg:aspect-square' : ''
-            }`}
-          />
+            className={i === 2 ? 'col-span-2 lg:col-span-1' : ''}
+          >
+            <img
+              src={s.src}
+              alt={s.alt}
+              loading="lazy"
+              width={1200}
+              height={1200}
+              className={`aspect-square w-full rounded-2xl border border-white/10 object-cover ${
+                i === 2 ? 'aspect-video lg:aspect-square' : ''
+              }`}
+            />
+          </ImageLightbox>
         ))}
       </div>
       <div className="mt-8 text-center">

@@ -1,43 +1,36 @@
-import { motion } from 'motion/react';
 import { benefits } from '../data/product';
 import { Section, SectionHeading } from './ui';
 
 export default function Benefits() {
   return (
-    <Section id="benefits" className="border-t border-white/5">
+    <Section id="functions" className="border-t border-white/10 bg-slate-950/30">
       <SectionHeading
-        eyebrow="جهاز واحد · 4 خدمات"
-        title="كل ما تحتاجو فالطريق فجهاز واحد"
-        sub="بلا ما تشري 4 حوايج مختلفين وتعمّر بيهم البوات."
+        eyebrow="4 خدمات فجهاز واحد"
+        title="الحلول الأساسية ديال الطريق فيدك"
       />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-        {benefits.map((b, i) => (
-          <motion.article
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {benefits.map((b) => (
+          <article
             key={b.num}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.35, delay: i * 0.05 }}
-            className="relative flex items-start gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-right sm:flex-col sm:gap-0 sm:p-5"
+            className="rounded-2xl border border-white/10 bg-white/[0.05] p-4 text-center sm:p-5"
           >
-            <span className="absolute -top-3 left-2 text-4xl font-black text-white/[0.06] sm:left-3 sm:text-5xl">
-              {b.num}
-            </span>
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-cyan/15 text-brand-cyan sm:mb-4">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-cyan/15 text-brand-cyan">
               <b.icon className="h-6 w-6" />
             </div>
-            <div className="min-w-0">
-              <h3 className="mb-1 text-lg font-black text-white">{b.title}</h3>
-              <p className="mb-3 text-sm leading-relaxed text-slate-400">{b.desc}</p>
-              <span
-                dir="ltr"
-                className="inline-block rounded-lg bg-brand-yellow/15 px-2.5 py-1 text-sm font-black text-brand-yellow"
-              >
-                {b.stat}
-              </span>
-            </div>
-          </motion.article>
+            <h3 className="text-base font-black text-white sm:text-lg">{b.title}</h3>
+            <p className="mt-1 text-sm leading-6 text-slate-300">{b.desc}</p>
+          </article>
         ))}
+      </div>
+      <div className="mt-5 grid grid-cols-2 gap-2 sm:gap-4">
+        <figure className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <img src="/images/use-battery-v2.webp" alt="تصوير توضيحي لاستعمال الجهاز مع بطارية السيارة" width="960" height="720" loading="lazy" className="aspect-[4/3] w-full object-cover" />
+          <figcaption className="px-2 py-2 text-[10px] leading-4 font-bold text-slate-300 sm:px-4 sm:py-3 sm:text-xs">تصوير توضيحي · اتبع دليل الاستعمال</figcaption>
+        </figure>
+        <figure className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <img src="/images/use-inflate-v2.webp" alt="تصوير توضيحي لاستعمال الجهاز في نفخ عجلة السيارة" width="960" height="720" loading="lazy" className="aspect-[4/3] w-full object-cover" />
+          <figcaption className="px-2 py-2 text-[10px] leading-4 font-bold text-slate-300 sm:px-4 sm:py-3 sm:text-xs">تصوير توضيحي · اتبع ضغط السيارة</figcaption>
+        </figure>
       </div>
     </Section>
   );

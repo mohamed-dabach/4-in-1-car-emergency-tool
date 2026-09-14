@@ -1,71 +1,43 @@
 import { useEffect, useState } from 'react';
 import { product } from '../data/product';
-import { scrollToOrder } from './ui';
 import { trackCheckoutClick, trackInitiateCheckout } from '../lib/metaEvents';
+import { scrollToOrder } from './ui';
 
-/**
- * شريط الطلب فالقاع (موبايل).
- * كيختافى ملي: كتكون شي CTA أخرى باينة فالشاشة، ولا ملي توصل لاستمارة الطلب.
- */
 export default function StickyCta() {
-  const [visible, setVisible] = useState(false);
+  const [heroCtaVisible, setHeroCtaVisible] = useState(true);
+  const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
-    const order = document.getElementById('order');
-    const ctas = Array.from(document.querySelectorAll<HTMLElement>('[data-cta]'));
+    const heroCta = document.querySelector('[data-cta-location="hero"]');
+    const orderSection = document.getElementById('order');
+    const observers: IntersectionObserver[] = [];
 
-    const isOnScreen = (el: HTMLElement, margin = 0) => {
-      const rect = el.getBoundingClientRect();
-      return rect.top < window.innerHeight - margin && rect.bottom > margin;
-    };
-
-    const update = () => {
-      const anyCtaVisible = ctas.some((el) => isOnScreen(el));
-      const formVisible = order ? isOnScreen(order, 80) : false;
-      setVisible(window.scrollY > 240 && !anyCtaVisible && !formVisible);
-    };
-
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
-    };
+    if (heroCta) {
+      const observer = new IntersectionObserver(([entry]) => setHeroCtaVisible(entry.isIntersecting), { threshold: 0.15 });
+      observer.observe(heroCta);
+      observers.push(observer);
+    }
+    if (orderSection) {
+      const observer = new IntersectionObserver(([entry]) => setFormVisible(entry.isIntersecting), { threshold: 0 });
+      observer.observe(orderSection);
+      observers.push(observer);
+    }
+    return () => observers.forEach((observer) => observer.disconnect());
   }, []);
 
+  const visible = !heroCtaVisible && !formVisible;
   return (
-    <div
-      data-testid="sticky-cta"
-      className={`fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-brand-navy/95 px-4 py-3 backdrop-blur transition-transform duration-300 lg:hidden ${
-        visible ? 'translate-y-0' : 'translate-y-full'
-      }`}
-    >
-      <div className="flex items-center justify-between gap-3">
+    <div data-testid="sticky-cta" aria-hidden={!visible} className={`fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-brand-navy/96 px-3 pt-2.5 pb-[calc(.625rem+env(safe-area-inset-bottom))] backdrop-blur transition-transform duration-200 lg:hidden ${visible ? 'translate-y-0' : 'translate-y-full'}`}>
+      <div className="mx-auto flex max-w-lg items-center justify-between gap-3">
         <div className="leading-tight">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-black text-brand-yellow">{product.price}</span>
-            <span className="text-sm font-bold text-brand-yellow">{product.currency}</span>
-            <span className="text-sm font-bold text-slate-500 line-through">
-              {product.oldPrice}
-            </span>
-            <span className="rounded-md bg-brand-red px-1.5 py-0.5 text-[11px] font-black text-white">
-              -{product.discount}%
-            </span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-2xl font-black tabular-nums text-brand-yellow">{product.price}</span>
+            {product.originalPrice && <span className="text-sm font-bold text-slate-400 line-through decoration-red-500 opacity-90">{product.originalPrice}</span>}
+            <span className="text-xl font-black text-brand-yellow">{product.currency}</span>
           </div>
-          <span className="text-xs font-bold text-slate-400">التوصيل مجاني · الدفع عند الاستلام</span>
+          <span className="block text-[11px] font-bold text-slate-300">التوصيل مجاني</span>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            trackCheckoutClick({ buttonLocation: 'sticky_bar', buttonName: 'اطلب دابا', price: product.price });
-            trackInitiateCheckout({ value: product.price, numItems: 1 });
-            scrollToOrder();
-          }}
-          className="cta-pulse shrink-0 rounded-xl bg-brand-red px-6 py-3.5 text-base font-black text-white transition-transform active:scale-[0.97]"
-        >
-          اطلب دابا
-        </button>
+        <button type="button" onClick={() => { trackCheckoutClick({ buttonLocation: 'sticky_bar', buttonName: 'اطلب دابا', price: product.price }); trackInitiateCheckout({ value: product.price, numItems: 1 }); scrollToOrder(); }} className="min-h-12 min-w-36 rounded-xl bg-brand-green px-5 text-base font-black text-white transition active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow animate-cta-blink">اطلب دابا</button>
       </div>
     </div>
   );

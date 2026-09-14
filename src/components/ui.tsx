@@ -15,7 +15,7 @@ export function Section({
     <section
       id={id}
       data-analytics-section={id}
-      className={`px-4 py-12 sm:px-6 sm:py-16 lg:py-24 ${className}`}
+      className={`px-4 py-7 sm:px-6 sm:py-12 lg:py-16 ${className}`}
     >
       <div className="mx-auto w-full max-w-6xl">{children}</div>
     </section>
@@ -32,7 +32,7 @@ export function SectionHeading({
   sub?: string;
 }) {
   return (
-    <div className="mb-8 text-center sm:mb-12">
+    <div className="mb-6 text-center sm:mb-8">
       {eyebrow && (
         <span className="mb-3 inline-block rounded-full border border-brand-yellow/30 bg-brand-yellow/10 px-4 py-1 text-sm font-bold text-brand-yellow">
           {eyebrow}
@@ -46,32 +46,6 @@ export function SectionHeading({
           {sub}
         </p>
       )}
-    </div>
-  );
-}
-
-export function Price({ size = 'md' }: { size?: 'md' | 'lg' }) {
-  const big = size === 'lg';
-  return (
-    <div className="flex items-end gap-3">
-      <div className="flex items-baseline gap-1">
-        <span
-          className={`font-black text-brand-yellow ${big ? 'text-5xl sm:text-6xl' : 'text-3xl'}`}
-        >
-          {product.price}
-        </span>
-        <span className={`font-bold text-brand-yellow ${big ? 'text-2xl' : 'text-lg'}`}>
-          {product.currency}
-        </span>
-      </div>
-      <span
-        className={`pb-1 font-bold text-slate-500 line-through ${big ? 'text-2xl' : 'text-lg'}`}
-      >
-        {product.oldPrice}
-      </span>
-      <span className="mb-1 rounded-lg bg-brand-red px-2 py-1 text-sm font-black text-white">
-        -{product.discount}%
-      </span>
     </div>
   );
 }
@@ -131,8 +105,9 @@ export function CtaButton({
     <button
       type="button"
       data-cta=""
+      data-cta-location={location}
       onClick={handleClick}
-      className={`cta-pulse inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-red px-6 py-4 text-lg font-black text-white transition-transform duration-150 active:scale-[0.97] sm:w-auto sm:px-10 sm:text-xl ${className}`}
+      className={`inline-flex min-h-14 w-full touch-manipulation items-center justify-center gap-2 rounded-2xl bg-brand-green px-6 py-4 text-lg font-black text-white shadow-[0_12px_28px_-14px_rgba(16,185,129,0.9)] transition duration-200 hover:bg-emerald-500 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand-yellow sm:w-auto sm:px-10 sm:text-xl animate-cta-blink ${className}`}
     >
       {children}
     </button>
