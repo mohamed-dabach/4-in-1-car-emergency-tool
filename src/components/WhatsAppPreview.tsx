@@ -18,8 +18,8 @@ export default function WhatsAppPreview() {
       <div className="mx-auto flex w-full max-w-5xl snap-x snap-mandatory gap-4 overflow-x-auto pb-6 pt-2 px-4 sm:px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {[1, 2, 3, 4, 5, 6, 7].map((num) => (
           <figure key={num} className="w-[75%] sm:w-[45%] lg:w-[32%] shrink-0 snap-center rounded-2xl border border-amber-300/30 bg-white p-2 shadow-sm transition-transform hover:scale-[1.02]">
-            <ImageLightbox src={`/src/preview-assets/whatsapp-${num}.png`} alt={`محادثة ${num}`} className="block h-full w-full">
-              <img src={`/src/preview-assets/whatsapp-${num}.png`} alt={`محادثة ${num}`} width="640" height="1138" loading="lazy" className="w-full rounded-xl object-cover" />
+            <ImageLightbox src={`/preview-assets/whatsapp-${num}.png`} alt={`محادثة ${num}`} className="block h-full w-full">
+              <img src={`/preview-assets/whatsapp-${num}.png`} alt={`محادثة ${num}`} width="640" height="1138" loading="lazy" className="w-full rounded-xl object-cover" />
             </ImageLightbox>
           </figure>
         ))}
