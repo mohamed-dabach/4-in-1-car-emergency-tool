@@ -4,7 +4,7 @@ import { offers, product, type Offer } from '../data/product';
 export default function OfferPicker({ selected, onSelect }: { selected: Offer; onSelect: (offer: Offer) => void }) {
   return (
     <fieldset>
-      <legend className="mb-2 block text-sm font-black text-brand-ink">عزلي العرض لي بغيتي</legend>
+      <legend className="mb-2 block text-sm font-black text-brand-ink">ختار العرض لي بغيتي</legend>
       <div className="grid gap-2">
         {offers.map((offer) => {
           const isSelected = selected.qty === offer.qty;

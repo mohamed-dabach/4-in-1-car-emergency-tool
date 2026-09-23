@@ -10,6 +10,7 @@ import ProblemSolution from './components/ProblemSolution';
 import Reviews from './components/Reviews';
 import StickyCta from './components/StickyCta';
 import WhatsappButton from './components/WhatsappButton';
+import WhatsappProof from './components/WhatsappProof';
 import { product } from './data/product';
 import { trackViewContent } from './lib/metaEvents';
 import { useScrollDepth, useTimeOnPage, useExitIntent, useSectionViews } from './lib/useEngagement';
@@ -32,6 +33,7 @@ export default function App() {
         <ProblemSolution />
         <PackContents />
         <Occasions />
+        <WhatsappProof />
         <OrderForm />
         <Reviews />
         <Faq />

@@ -33,7 +33,7 @@ export const offers: Offer[] = [
     originalPrice: 699,
     title: 'عرض الخوت: جوج د ليباك',
     desc: 'جوج شهادات، كل وحدة بسميتها',
-    badge: 'وفري 150 درهم',
+    badge: 'وفّر 150 درهم',
   },
 ];
 
@@ -68,7 +68,7 @@ export const packItems: PackItem[] = [
   {
     icon: Award,
     title: 'شهادة تقديرية بسمية وليدك',
-    desc: 'كنطبعو سميتو فشهادة "الفنان الصغير" بجودة واعرة. غير كتبيها لينا فالاستمارة.',
+    desc: 'كنطبعو سميتو فشهادة "الفنان الصغير" بجودة واعرة. غير كتبها لينا فالاستمارة.',
     image: '/images/pack-certificate.webp',
     alt: 'شهادة الفنان الصغير مطبوعة باسم الطفل',
     badge: 'كادو خاص وفابور',
@@ -76,7 +76,7 @@ export const packItems: PackItem[] = [
   {
     icon: Frame,
     title: 'كادر د الخشب للصالون',
-    desc: 'خشب صحيح وزوين، تعلقي فيه الشهادة وتبقى ذكرى زوينة فالدار.',
+    desc: 'خشب صحيح وزوين، تعلّق فيه الشهادة وتبقى ذكرى زوينة فالدار.',
     image: '/images/pack-frame.webp',
     alt: 'كادر خشبي فيه الشهادة',
   },
@@ -103,19 +103,19 @@ export type ProductReview = {
 /** آراء بالدارجة، بالعربية، بالفرنسية وبالحروف اللاتينية بحال ما كيكتبو الزبناء */
 export const reviews: ProductReview[] = [
   { name: "أم آدم", city: "كازا", stars: 5, ago: "قبل يومين", lang: "darija", text: "خديتو لولدي آدم عندو 5 سنين، الصراحة رحمة سيدي ربي. نسى التيليفون و مبرزطنيش، جالس كيلون و أنا كنطيب على خاطري. و فرح بزاف ملي شاف سميتو فالشهادة وعلقناها فالصالون." },
-  { name: "Khadija B.", city: "Tanger", stars: 5, ago: "قبل سيمانة", lang: "arabizi", text: "tbarkellah zwin bzaf khdito l bnti rania, jatna f 24h, w lqualité mzyana bzaf. kantlboha l ay om bghat thna men tel." },
-  { name: "سناء", city: "الرباط", stars: 4, ago: "قبل 4 أيام", lang: "darija", text: "الباك زوين و فيه بزاف د الألوان، بنتي حماقت عليه و الكادر ديال الخشب صحيح. غي هو تعطل عليا الليفرور يومين عاد وصلني، مي ماشي مشكل السلعة تستاهل." },
+  { name: "Khadija B.", city: "Tanger", stars: 5, ago: "قبل سيمانة", lang: "arabizi", text: "tbarkellah zwin bzaf khdito l bnti rania, jatna f 24h, w lqualité mzyana bzaf. kannsa7 bih ga3 lwalidin li bghaw y7iydo tel l drari." },
+  { name: "رشيد", city: "الرباط", stars: 4, ago: "قبل 4 أيام", lang: "darija", text: "الباك زوين و فيه بزاف د الألوان، بنتي حماقت عليه و الكادر ديال الخشب صحيح. غي هو تعطل عليا الليفرور يومين عاد وصلني، مي ماشي مشكل السلعة تستاهل." },
   { name: "Mme Imane", city: "Marrakech", stars: 5, ago: "قبل 10 أيام", lang: "french", text: "Franchement super ! J'ai pris l'offre pour les deux (mes jumeaux), et ça a sauvé mes week-ends. Fini les cris pour avoir la tablette, la maison est beaucoup plus calme. Les certificats sont de bonne qualité." },
   { name: "أم ريان", city: "فاس", stars: 5, ago: "قبل 5 أيام", lang: "darija", text: "هاد الباك عتقني صراحة! ريان كان مقابل غير الشاشات و دابا ولا جالس مهدن كيرسم و يلون. الكتيب ديال الرسومات عجبو بزاف و الشهادة عجباتو كثر. شكرا ليكم." },
   { name: "ياسين", city: "مكناس", stars: 5, ago: "قبل 3 أيام", lang: "arabic", text: "المنتج ممتاز جدا ومطابق للصور. اشتريته لابنتي وهي سعيدة جدا بالشهادة التي تحمل اسمها. شكرا على المصداقية وسرعة التوصيل." },
   { name: "ليلى", city: "أكادير", stars: 4, ago: "قبل سيمانة", lang: "darija", text: "الماليطا واعرة و فيها كاع داكشي لي كيحتاجو الدراري، ولدي فرح بيها. الكارطونة كانت شوية مقيوسة من الجنب منين جابها الليفرور، ولكن داكشي لداخل بقا مزيان. كنتمنى تزيدو فعدد الصفحات ديال كتيب التلوين." },
-  { name: "Sara", city: "Salé", stars: 5, ago: "قبل يوماين", lang: "french", text: "Très bon produit, livraison rapide et gratuite. Ma fille adore peindre avec." },
+  { name: "Karim", city: "Salé", stars: 5, ago: "قبل يوماين", lang: "french", text: "Très bon produit, livraison rapide et gratuite. Ma fille adore peindre avec." },
 ];
 
 export const faq = [
   {
     q: 'كيفاش نخلص؟',
-    a: 'كتخلصي حتى يوصلك الباك ليديك وتقلبيه. ما كاين لا تسبيق لا والو.',
+    a: 'كتخلص حتى يوصلك الباك ليديك وتقلبو. ما كاين لا تسبيق لا والو.',
   },
   {
     q: 'شحال كيتعطل التوصيل؟',
@@ -127,16 +127,23 @@ export const faq = [
   },
   {
     q: 'كيفاش كديرو للسمية فالشهادة؟',
-    a: 'كتكتبي سمية وليدك فالاستمارة، ومن بعد كنعيطو ليك باش نأكدو معاك الطلب ونتأكدو من السمية كيف مكتوبة قبل ما نطبعوها.',
+    a: 'كتكتب سمية وليدك فالاستمارة، ومن بعد كنعيطو ليك باش نأكدو معاك الطلب ونتأكدو من السمية كيف مكتوبة قبل ما نطبعوها.',
   },
   {
     q: 'واش نقدر نطلب جوج لي باك بسميات مبدلين؟',
-    a: 'أه، عرض الخوت فيه جوج لي باك وجوج شهادات، كل وحدة بسميتها. كتكتبي السميات بجوج فالاستمارة.',
+    a: 'أه، عرض الخوت فيه جوج لي باك وجوج شهادات، كل وحدة بسميتها. كتكتب السميات بجوج فالاستمارة.',
   },
   {
     q: 'وإلا وصلاتني شي حاجة ناقصة ولا مهرسة؟',
-    a: 'كتحلي الكولي قدام الليفرور. وإلا لقيتي شي حاجة ناقصة ولا مهرسة، كنبدلوه ليك فابور.',
+    a: 'كتحل الكولي قدام الليفرور. وإلا لقيتي شي حاجة ناقصة ولا مهرسة، كنبدلوه ليك فابور.',
   },
 ];
 
 export const trustBadges = ['التوصيل فابور لكل المدن', 'الخلاص عند الاستلام', 'تبديل إلا كانت شي مشكلة'];
+
+/**
+ * سكرينات حقيقية ديال الواتساب من عند الكليان (بلا نمرة ولا تصويرة ديال الوليد).
+ * حط الصور ف public/proof/ (webp، عرض 640) وزيد المسار هنا، مثلا '/proof/wa-1.webp'.
+ * القسم كيبان غير إلا كانت شي سكرينة فهاد الليستة.
+ */
+export const whatsappProofs: string[] = [];

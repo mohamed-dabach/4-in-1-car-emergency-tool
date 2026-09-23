@@ -9,7 +9,7 @@ export default function Faq() {
 
   return (
     <Section id="faq" className="bg-brand-cream">
-      <SectionHeading eyebrow="قبل ما تطلبي" title="الأسئلة لي كيسولونا الأمهات بزاف" />
+      <SectionHeading eyebrow="قبل ما تطلب" title="الأسئلة لي كيسولونا الواليدين بزاف" />
       <div className="mx-auto max-w-3xl space-y-3">
         {faq.map((item, i) => {
           const isOpen = open === i;

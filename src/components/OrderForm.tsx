@@ -29,7 +29,7 @@ export default function OrderForm() {
   const selectOffer = (next: Offer) => { setOffer(next); trackOfferSelected({ quantity: next.qty, value: next.price }); };
   const validatePhone = (value: string) => {
     const valid = PHONE_PATTERN.test(normalizePhone(value));
-    setPhoneError(valid ? '' : 'دخلي رقم تليفون صحيح، مثلا 0612345678');
+    setPhoneError(valid ? '' : 'دخل رقم تليفون صحيح، مثلا 0612345678');
     return valid;
   };
 
@@ -75,9 +75,9 @@ export default function OrderForm() {
           ) : (
             <>
               <div className="mb-5 text-center">
-                <p className="text-sm font-black text-brand-red">التوصيل فابور · خلصي حتى تشدي الكولي</p>
-                <h2 className="font-display mt-1 text-[26px] font-extrabold sm:text-3xl">🛒 عمري الاستمارة باش تطلبي</h2>
-                <p className="mt-1 text-sm text-brand-ink/60">عمري هاد المعلومات وغادي نعيطو ليك باش نأكدو لاكوموند</p>
+                <p className="text-sm font-black text-brand-red">التوصيل فابور · خلّص حتى تشد الكولي</p>
+                <h2 className="font-display mt-1 text-[26px] font-extrabold sm:text-3xl">🛒 عمّر الاستمارة باش تطلب</h2>
+                <p className="mt-1 text-sm text-brand-ink/60">عمّر هاد المعلومات وغادي نعيطو ليك باش نأكدو لاكوموند</p>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <OfferPicker selected={offer} onSelect={selectOffer} />
@@ -95,8 +95,8 @@ export default function OrderForm() {
                     {offer.qty === 2 ? <Field label={<span className="sr-only">سمية الوليد الثاني</span>}><input name="child2" type="text" required autoComplete="off" placeholder="سمية الوليد الثاني" className={inputClass} /></Field> : null}
                   </div>
                 </div>
-                <button type="submit" data-cta="" disabled={isSubmitting} className="flex min-h-14 w-full touch-manipulation items-center justify-center gap-2 rounded-2xl bg-brand-red px-5 text-xl font-black text-white shadow-[0_12px_28px_-12px_rgba(240,71,59,0.9)] transition hover:brightness-105 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand-cyan">{isSubmitting ? <><LoaderCircle className="h-6 w-6 animate-spin" /> كنسجلو الطلب ديالك...</> : <><ShoppingCart className="h-6 w-6" /> كليكي هنا باش تأكدي لاكوموند</>}</button>
-                <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs font-bold text-brand-ink/65"><li className="flex items-center gap-1"><Truck className="h-4 w-4" /> توصيل فابور وبالزربة</li><li className="flex items-center gap-1"><PackageSearch className="h-4 w-4" /> قلبي سلعتك عاد خلصي</li><li className="flex items-center gap-1"><Wallet className="h-4 w-4" /> الخلاص عند الاستلام</li></ul>
+                <button type="submit" data-cta="" disabled={isSubmitting} className="flex min-h-14 w-full touch-manipulation items-center justify-center gap-2 rounded-2xl bg-brand-red px-5 text-xl font-black text-white shadow-[0_12px_28px_-12px_rgba(240,71,59,0.9)] transition hover:brightness-105 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand-cyan">{isSubmitting ? <><LoaderCircle className="h-6 w-6 animate-spin" /> كنسجلو الطلب ديالك...</> : <><ShoppingCart className="h-6 w-6" /> كليكي هنا باش تأكد لاكوموند</>}</button>
+                <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs font-bold text-brand-ink/65"><li className="flex items-center gap-1"><Truck className="h-4 w-4" /> توصيل فابور وبالزربة</li><li className="flex items-center gap-1"><PackageSearch className="h-4 w-4" /> قلّب سلعتك عاد خلّص</li><li className="flex items-center gap-1"><Wallet className="h-4 w-4" /> الخلاص عند الاستلام</li></ul>
                 {failed ? <WhatsappFallbackLink order={failed} /> : <WhatsappInlineLink />}
               </form>
             </>

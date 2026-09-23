@@ -76,7 +76,7 @@ export function WhatsappFallbackLink({
   return (
     <div className="mt-4 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-center">
       <p className="text-sm font-black text-amber-900">
-        ما دازتش لينا لاكوموند دابا. صيفطيها لينا فالواتساب وحنا نتكلفو بكلشي.
+        ما دازتش لينا لاكوموند دابا. صيفطها لينا فالواتساب وحنا نتكلفو بكلشي.
       </p>
       {whatsappEnabled ? (
         <a
@@ -87,7 +87,7 @@ export function WhatsappFallbackLink({
           className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] py-3.5 text-base font-black text-white"
         >
           <WhatsappIcon className="h-5 w-5" />
-          صيفطي الطلب فالواتساب
+          صيفط الطلب فالواتساب
         </a>
       ) : (
         <p className="mt-2 text-sm font-bold text-amber-800">عاود جرب من بعد شوية.</p>
