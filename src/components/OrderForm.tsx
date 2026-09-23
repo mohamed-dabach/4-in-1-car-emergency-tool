@@ -70,7 +70,7 @@ export default function OrderForm() {
               <h2 className="font-display text-2xl font-extrabold">دازت لاكوموند ديالك بنجاح 🎉</h2>
               <p data-clarity-mask="true" className="mt-2 text-base leading-7 text-brand-ink/70">غادي نعيطو ليك فالتليفون باش نأكدو لاكوموند والعنوان، ونتأكدو حتى من السمية لي غانطبعو فالشهادة{childName ? <>: <b className="text-brand-ink">{childName}</b></> : null}.</p>
               <p className="mt-4 inline-block rounded-xl bg-brand-cream px-4 py-2 text-sm font-black">رقم لاكوموند: <span dir="ltr">{orderCode}</span></p>
-              {whatsappEnabled ? <a href={whatsappLink(`سلام، بغيت نأكد لاكوموند ديالي: ${orderCode}`)} target="_blank" rel="noopener noreferrer" onClick={() => trackContact('whatsapp')} className="mx-auto mt-5 flex min-h-12 max-w-sm items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 font-black text-white"><WhatsappIcon className="h-5 w-5" /> ولا أكدي طلبك فالواتساب</a> : null}
+              {whatsappEnabled ? <a href={whatsappLink(`سلام، بغيت نأكد لاكوموند ديالي: ${orderCode}`)} target="_blank" rel="noopener noreferrer" onClick={() => trackContact('whatsapp')} className="mx-auto mt-5 flex min-h-12 max-w-sm items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 font-black text-white"><WhatsappIcon className="h-5 w-5" /> ولا أكّد طلبك فالواتساب</a> : null}
             </div>
           ) : (
             <>
