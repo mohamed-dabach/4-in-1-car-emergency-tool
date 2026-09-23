@@ -28,11 +28,11 @@ export default function Hero() {
         <div className="text-center lg:text-right">
           <p className="text-xs font-black tracking-wide text-brand-cyan sm:text-sm">CARYYSTORE · {product.name}</p>
           <h1 className="font-display mt-1 text-[30px] leading-[1.25] font-extrabold text-brand-ink sm:text-4xl lg:text-5xl">
-            ودّع إدمان التيليفون…
-            <span className="block text-brand-red">وفجّر موهبة وليدك فالدار!</span>
+            ودعي إدمان التيليفون…
+            <span className="block text-brand-red">وبيني موهبة وليدك فالدار!</span>
           </h1>
           <p className="mx-auto mt-2 max-w-xl text-[15px] leading-7 font-semibold text-brand-ink/75 sm:text-lg lg:mx-0">
-            208 قطعة ديال الألوان + <b className="text-brand-ink">شهادة باسم وليدك</b> + كادر خشبي + كتيب التلوين
+            208 بياسة د الألوان + <b className="text-brand-ink">شهادة بسمية وليدك</b> + كادر د الخشب + كتيب د التلوين
           </p>
 
           <div className="mx-auto mt-3 w-full max-w-md lg:hidden">
@@ -46,16 +46,16 @@ export default function Hero() {
               <span className="text-xl text-brand-ink/45 line-through decoration-brand-red decoration-2">
                 {product.originalPrice} {product.currency}
               </span>
-              <span className="self-center rounded-full bg-brand-green px-2.5 py-0.5 text-xs text-white">التوصيل مجاني</span>
+              <span className="self-center rounded-full bg-brand-green px-2.5 py-0.5 text-xs text-white">التوصيل فابور</span>
             </div>
-            <CtaButton className="w-full max-w-md sm:w-full" location="hero" label="اطلب الآن وادفع عند الاستلام">
-              اطلب الآن وادفع عند الاستلام
+            <CtaButton className="w-full max-w-md sm:w-full" location="hero" label="طلبي دابا وخلصي حتى يوصلك">
+              طلبي دابا وخلصي حتى يوصلك
             </CtaButton>
           </div>
           <ul className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs font-bold text-brand-ink/70 lg:justify-start">
-            <li className="flex items-center gap-1"><Clock3 className="h-4 w-4 text-brand-cyan" /> 24 حتى 72 ساعة</li>
-            <li className="flex items-center gap-1"><PackageSearch className="h-4 w-4 text-brand-cyan" /> عاين قبل ما تخلص</li>
-            <li className="flex items-center gap-1"><RotateCcw className="h-4 w-4 text-brand-cyan" /> تبديل مضمون</li>
+            <li className="flex items-center gap-1"><Clock3 className="h-4 w-4 text-brand-cyan" /> كيوصلك بين 24 و 48 ساعة</li>
+            <li className="flex items-center gap-1"><PackageSearch className="h-4 w-4 text-brand-cyan" /> قلبي الكولي عاد خلصي</li>
+            <li className="flex items-center gap-1"><RotateCcw className="h-4 w-4 text-brand-cyan" /> التبديل مضمون</li>
           </ul>
         </div>
 

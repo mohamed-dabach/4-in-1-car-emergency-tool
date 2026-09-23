@@ -6,7 +6,7 @@ export default function Footer() {
       <p className="font-display text-lg font-extrabold text-brand-yellow">{product.name}</p>
       <p className="mt-1 text-sm text-white/70">{product.tagline}</p>
       <p className="mt-4 text-xs leading-6 text-white/60">
-        التوصيل من 24 حتى 72 ساعة حسب المدينة · الدفع عند الاستلام · تبديل إلا كانت شي مشكلة
+        التوصيل فابور بين 24 و 48 ساعة · الخلاص عند الاستلام · التبديل مضمون إلا كاين شي مشكل
       </p>
       <p className="mt-2 text-xs text-white/45">© {new Date().getFullYear()} Caryystore — جميع الحقوق محفوظة.</p>
     </footer>

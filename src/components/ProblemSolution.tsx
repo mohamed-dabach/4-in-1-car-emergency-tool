@@ -5,7 +5,7 @@ import { Section, SectionHeading } from './ui';
 function Card({ card, good }: { card: StoryCard; good: boolean }) {
   const Icon = good ? CheckCircle2 : XCircle;
   return (
-    <article className={`overflow-hidden rounded-3xl border-2 ${good ? 'border-brand-green/40 bg-white' : 'border-brand-ink/10 bg-[#ecebe8]'}`}>
+    <article className={`w-full overflow-hidden rounded-3xl border-2 ${good ? 'border-brand-green/40 bg-white' : 'border-brand-ink/10 bg-[#ecebe8]'}`}>
       <h3 className={`flex items-center gap-2 px-4 py-3 text-lg font-black ${good ? 'text-brand-green' : 'bg-brand-ink text-white'}`}>
         <Icon className={`h-6 w-6 shrink-0 ${good ? '' : 'text-brand-red'}`} /> {card.title}
       </h3>
@@ -35,10 +35,11 @@ function Card({ card, good }: { card: StoryCard; good: boolean }) {
 export default function ProblemSolution() {
   return (
     <Section id="problem" className="bg-brand-cream">
-      <SectionHeading title="علاش وليدك محتاج هاد البديل دابا؟" />
-      <div className="relative mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
+      <SectionHeading title="علاش وليدك محتاج هاد الباك دابا؟" />
+      {/* فالتيليفون الـ VS كيجي بين جوج البطاقات (ماشي فوقهم)، فالديسكتوب فالوسط بيناتهم */}
+      <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-3 md:grid md:grid-cols-2 md:gap-8">
         <Card card={problem} good={false} />
-        <span aria-hidden className="font-display absolute top-1/2 left-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-brand-yellow text-lg font-extrabold text-brand-ink shadow-lg ring-4 ring-brand-cream">VS</span>
+        <span aria-hidden className="font-display z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-yellow text-lg font-extrabold text-brand-ink shadow-lg ring-4 ring-brand-cream md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2">VS</span>
         <Card card={solution} good />
       </div>
     </Section>

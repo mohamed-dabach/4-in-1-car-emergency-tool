@@ -36,7 +36,7 @@ export default function StickyCta() {
             <span className="text-lg font-black text-brand-red">{product.currency}</span>
             <span className="text-sm font-bold text-brand-ink/40 line-through decoration-brand-red">{product.originalPrice}</span>
           </div>
-          <span className="block text-[11px] font-bold whitespace-nowrap text-brand-ink/60">توصيل مجاني · الدفع عند الاستلام</span>
+          <span className="block text-[11px] leading-4 font-bold text-brand-ink/60">التوصيل فابور · الخلاص عند الاستلام</span>
         </div>
         <button type="button" tabIndex={visible ? 0 : -1} onClick={() => { trackCheckoutClick({ buttonLocation: 'sticky_bar', buttonName: label, price: product.price }); trackInitiateCheckout({ value: product.price, numItems: 1 }); scrollToOrder(); }} className="min-h-12 shrink-0 whitespace-nowrap rounded-xl bg-brand-red px-4 text-base font-black text-white transition active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan animate-cta-blink">اطلب الآن <bdi dir="ltr">({product.price} DH)</bdi></button>
       </div>

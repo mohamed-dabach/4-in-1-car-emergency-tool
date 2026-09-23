@@ -5,7 +5,7 @@ import { CtaButton, Section, SectionHeading } from './ui';
 export default function PackContents() {
   return (
     <Section id="pack" className="splash">
-      <SectionHeading eyebrow="📦 كلشي فكولي واحد" title="أشنو كيوصلك بالضبط فالطقم؟" />
+      <SectionHeading eyebrow="📦 كلشي مجموع فكولي واحد" title="أشنو كيوصلك بالضبط فهاد الباك؟" />
       <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
         {packItems.map(({ icon: Icon, title, desc, image, alt, badge }) => (
           <article key={title} className="flex items-center gap-3 rounded-3xl border border-brand-ink/10 bg-white p-3 shadow-sm">
@@ -25,8 +25,8 @@ export default function PackContents() {
         ))}
       </div>
       <div className="mt-6 text-center">
-        <CtaButton location="pack_contents" label="بغيت الطقم كامل" className="max-w-md">
-          بغيت الطقم كامل ب {product.price} {product.currency}
+        <CtaButton location="pack_contents" label="بغيت الباك كامل" className="max-w-md">
+          بغيت الباك كامل بـ {product.price} {product.currency}
         </CtaButton>
       </div>
     </Section>
