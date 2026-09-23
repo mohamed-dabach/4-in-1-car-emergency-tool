@@ -54,7 +54,7 @@ export default function OrderForm() {
     setOrderCode(result.code);
     setChildName(children);
     setIsSuccess(true);
-    trackPurchase({ value: order.total, numItems: order.quantity, orderId: result.code, contentName: order.offer });
+    trackPurchase({ value: order.total, numItems: order.quantity, orderId: result.code, contentName: offer.title }); // بلا سمية الطفل: ما كتمشيش لـ Meta
   };
 
   return (
@@ -68,7 +68,7 @@ export default function OrderForm() {
             <div className="py-6 text-center" aria-live="polite">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-700"><CheckCircle2 className="h-9 w-9" /></div>
               <h2 className="font-display text-2xl font-extrabold">تسجّل الطلب ديالك 🎉</h2>
-              <p className="mt-2 text-base leading-7 text-brand-ink/70">غادي نتاصلو بيك فالتليفون باش نأكدو الطلب والعنوان، ونتأكدو من السمية لي غادي تتطبع على الشهادة{childName ? <>: <b className="text-brand-ink">{childName}</b></> : null}.</p>
+              <p data-clarity-mask="true" className="mt-2 text-base leading-7 text-brand-ink/70">غادي نتاصلو بيك فالتليفون باش نأكدو الطلب والعنوان، ونتأكدو من السمية لي غادي تتطبع على الشهادة{childName ? <>: <b className="text-brand-ink">{childName}</b></> : null}.</p>
               <p className="mt-4 inline-block rounded-xl bg-brand-cream px-4 py-2 text-sm font-black">رقم الطلب: <span dir="ltr">{orderCode}</span></p>
               {whatsappEnabled ? <a href={whatsappLink(`سلام، بغيت نأكد الطلب ديالي: ${orderCode}`)} target="_blank" rel="noopener noreferrer" onClick={() => trackContact('whatsapp')} className="mx-auto mt-5 flex min-h-12 max-w-sm items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 font-black text-white"><WhatsappIcon className="h-5 w-5" /> أكّد اختيارياً فواتساب</a> : null}
             </div>
