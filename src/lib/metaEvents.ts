@@ -11,7 +11,7 @@
 export const FB_PIXEL_ID = (import.meta.env.VITE_FB_PIXEL_ID as string | undefined) ?? '1405464681543137';
 
 const CURRENCY = 'MAD';
-const CONTENT_ID = 'car-emergency-4in1';
+const CONTENT_ID = 'kids-art-pack-208';
 
 type FbqArgs = [string, string, Record<string, unknown>?, { eventID?: string }?];
 
@@ -181,7 +181,7 @@ export function trackContact(method: 'whatsapp') {
 // ── Custom events — fbq('trackCustom', …) ──────────────────────────
 
 export function trackCheckoutClick(params: {
-  buttonLocation: 'hero' | 'real_photos' | 'sticky_bar' | 'offer_picker';
+  buttonLocation: 'hero' | 'pack_contents' | 'sticky_bar' | 'offer_picker';
   buttonName: string;
   price: number;
 }) {

@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import AnnounceBar from './components/AnnounceBar';
-import Benefits from './components/Benefits';
 import Faq from './components/Faq';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
+import Occasions from './components/Occasions';
 import OrderForm from './components/OrderForm';
-import ProductProof from './components/ProductProof';
+import PackContents from './components/PackContents';
+import ProblemSolution from './components/ProblemSolution';
+import Reviews from './components/Reviews';
 import StickyCta from './components/StickyCta';
-import WhatsAppPreview from './components/WhatsAppPreview';
 import WhatsappButton from './components/WhatsappButton';
 import { product } from './data/product';
 import { trackViewContent } from './lib/metaEvents';
@@ -24,14 +25,15 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-brand-navy text-white selection:bg-brand-yellow selection:text-brand-navy">
+    <div className="min-h-screen overflow-x-hidden bg-brand-paper text-brand-ink selection:bg-brand-yellow selection:text-brand-ink">
       <AnnounceBar />
       <main>
         <Hero />
-        <Benefits />
-        <ProductProof />
+        <ProblemSolution />
+        <PackContents />
+        <Occasions />
         <OrderForm />
-        <WhatsAppPreview />
+        <Reviews />
         <Faq />
       </main>
       <Footer />

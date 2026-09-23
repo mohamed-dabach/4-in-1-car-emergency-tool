@@ -16,7 +16,7 @@ export const whatsappPlaceholder: string = '212600000000';
 export const whatsappEnabled = whatsappNumber !== whatsappPlaceholder;
 
 /** الرسالة لي كتعمر بوحدها ملي كيحل واتساب */
-export const whatsappMessage = 'سلام 👋 بغيت نسول على جهاز الطوارئ 4 فـ1';
+export const whatsappMessage = 'سلام 👋 بغيت نسول على طقم الفنان الصغير';
 
 export function whatsappLink(message: string = whatsappMessage) {
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;

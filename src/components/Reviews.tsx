@@ -4,28 +4,26 @@ import { Section, SectionHeading } from './ui';
 
 export default function Reviews() {
   return (
-    <Section id="reviews" className="border-t border-white/5">
-      <SectionHeading eyebrow="آراء الزبناء" title="شنو كيقولو لي شراوه" />
-      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
-        {reviews.map((r) => (
+    <Section id="reviews">
+      <SectionHeading eyebrow="⭐⭐⭐⭐⭐" title="آراء زبنائنا" />
+      <div className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
+        {reviews.map((r, i) => (
           <figure
             key={r.name}
-            className="w-[85%] shrink-0 snap-center rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-right sm:w-[60%] lg:w-auto"
+            className={`relative rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-ink/10 ${i % 2 ? 'sm:mt-6 rounded-tl-sm' : 'rounded-tr-sm'}`}
           >
-            <div className="mb-3 flex gap-0.5">
-              {Array.from({ length: 5 }, (_, i) => (
-                <Star
-                  key={i}
-                  className={`h-4 w-4 ${i < r.stars ? 'fill-brand-yellow text-brand-yellow' : 'text-slate-600'}`}
-                />
-              ))}
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <figcaption className="flex items-center gap-2 text-sm font-black text-brand-ink">
+                <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-yellow/50 text-base">{r.name.split(' ')[1]?.[0] ?? r.name[0]}</span>
+                <span>{r.name}<span className="block text-xs font-bold text-brand-ink/50">{r.city}</span></span>
+              </figcaption>
+              <div className="flex gap-0.5" aria-label={`${r.stars} من 5`}>
+                {Array.from({ length: 5 }, (_, s) => (
+                  <Star key={s} className={`h-4 w-4 ${s < r.stars ? 'fill-brand-green text-brand-green' : 'text-brand-ink/20'}`} />
+                ))}
+              </div>
             </div>
-            <blockquote className="text-sm leading-relaxed text-slate-200 sm:text-base">
-              {r.text}
-            </blockquote>
-            <figcaption className="mt-4 text-sm font-black text-brand-cyan">
-              {r.name} — {r.city}
-            </figcaption>
+            <blockquote className="text-[15px] leading-7 text-brand-ink/85">{r.text}</blockquote>
           </figure>
         ))}
       </div>

@@ -26,18 +26,19 @@ export default function StickyCta() {
   }, []);
 
   const visible = !heroCtaVisible && !formVisible;
+  const label = `اطلب الآن (${product.price} DH)`;
   return (
-    <div data-testid="sticky-cta" aria-hidden={!visible} className={`fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-brand-navy/96 px-3 pt-2.5 pb-[calc(.625rem+env(safe-area-inset-bottom))] backdrop-blur transition-transform duration-200 lg:hidden ${visible ? 'translate-y-0' : 'translate-y-full'}`}>
+    <div data-testid="sticky-cta" aria-hidden={!visible} className={`fixed inset-x-0 bottom-0 z-50 border-t border-brand-ink/10 bg-white/95 px-3 pt-2.5 pb-[calc(.625rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(31,26,23,0.3)] backdrop-blur transition-transform duration-200 lg:hidden ${visible ? 'translate-y-0' : 'translate-y-full'}`}>
       <div className="mx-auto flex max-w-lg items-center justify-between gap-3">
-        <div className="leading-tight">
+        <div className="min-w-0 leading-tight">
           <div className="flex items-center gap-1.5">
-            <span className="text-2xl font-black tabular-nums text-brand-yellow">{product.price}</span>
-            {product.originalPrice && <span className="text-sm font-bold text-slate-400 line-through decoration-red-500 opacity-90">{product.originalPrice}</span>}
-            <span className="text-xl font-black text-brand-yellow">{product.currency}</span>
+            <span className="text-2xl font-black tabular-nums text-brand-red">{product.price}</span>
+            <span className="text-lg font-black text-brand-red">{product.currency}</span>
+            <span className="text-sm font-bold text-brand-ink/40 line-through decoration-brand-red">{product.originalPrice}</span>
           </div>
-          <span className="block text-[11px] font-bold text-slate-300">التوصيل مجاني</span>
+          <span className="block text-[11px] font-bold whitespace-nowrap text-brand-ink/60">توصيل مجاني · الدفع عند الاستلام</span>
         </div>
-        <button type="button" onClick={() => { trackCheckoutClick({ buttonLocation: 'sticky_bar', buttonName: 'اطلب دابا', price: product.price }); trackInitiateCheckout({ value: product.price, numItems: 1 }); scrollToOrder(); }} className="min-h-12 min-w-36 rounded-xl bg-brand-green px-5 text-base font-black text-white transition active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow animate-cta-blink">اطلب دابا</button>
+        <button type="button" tabIndex={visible ? 0 : -1} onClick={() => { trackCheckoutClick({ buttonLocation: 'sticky_bar', buttonName: label, price: product.price }); trackInitiateCheckout({ value: product.price, numItems: 1 }); scrollToOrder(); }} className="min-h-12 shrink-0 whitespace-nowrap rounded-xl bg-brand-red px-4 text-base font-black text-white transition active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan animate-cta-blink">اطلب الآن <bdi dir="ltr">({product.price} DH)</bdi></button>
       </div>
     </div>
   );

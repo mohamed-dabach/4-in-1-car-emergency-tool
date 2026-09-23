@@ -15,7 +15,7 @@ export function Section({
     <section
       id={id}
       data-analytics-section={id}
-      className={`px-4 py-7 sm:px-6 sm:py-12 lg:py-16 ${className}`}
+      className={`px-4 py-9 sm:px-6 sm:py-12 lg:py-16 ${className}`}
     >
       <div className="mx-auto w-full max-w-6xl">{children}</div>
     </section>
@@ -34,15 +34,15 @@ export function SectionHeading({
   return (
     <div className="mb-6 text-center sm:mb-8">
       {eyebrow && (
-        <span className="mb-3 inline-block rounded-full border border-brand-yellow/30 bg-brand-yellow/10 px-4 py-1 text-sm font-bold text-brand-yellow">
+        <span className="mb-3 inline-block rounded-full bg-brand-yellow/40 px-4 py-1 text-sm font-black text-brand-ink">
           {eyebrow}
         </span>
       )}
-      <h2 className="text-2xl leading-snug font-black text-white sm:text-3xl lg:text-4xl">
+      <h2 className="font-display text-[26px] leading-snug font-extrabold text-brand-ink sm:text-3xl lg:text-4xl">
         {title}
       </h2>
       {sub && (
-        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+        <p className="mx-auto mt-2 max-w-2xl text-base leading-relaxed text-brand-ink/70 sm:text-lg">
           {sub}
         </p>
       )}
@@ -87,12 +87,12 @@ export function CtaButton({
   className = '',
   onClick = scrollToOrder,
   location = 'hero',
-  label = 'اطلب دابا',
+  label = 'اطلب الآن',
 }: {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
-  location?: 'hero' | 'real_photos' | 'offer_picker';
+  location?: 'hero' | 'pack_contents' | 'offer_picker';
   label?: string;
 }) {
   const handleClick = () => {
@@ -107,7 +107,7 @@ export function CtaButton({
       data-cta=""
       data-cta-location={location}
       onClick={handleClick}
-      className={`inline-flex min-h-14 w-full touch-manipulation items-center justify-center gap-2 rounded-2xl bg-brand-green px-6 py-4 text-lg font-black text-white shadow-[0_12px_28px_-14px_rgba(16,185,129,0.9)] transition duration-200 hover:bg-emerald-500 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand-yellow sm:w-auto sm:px-10 sm:text-xl animate-cta-blink ${className}`}
+      className={`inline-flex min-h-14 w-full touch-manipulation items-center justify-center gap-2 rounded-2xl bg-brand-red px-6 py-3.5 text-lg font-black text-white shadow-[0_12px_28px_-12px_rgba(240,71,59,0.85)] transition duration-200 hover:brightness-105 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand-cyan sm:w-auto sm:px-10 sm:text-xl animate-cta-blink ${className}`}
     >
       {children}
     </button>

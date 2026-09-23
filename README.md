@@ -1,8 +1,11 @@
-# جهاز الطوارئ 4 فـ1 — Landing Page
+# طقم الفنان الصغير — Landing Page
 
-Arabic (Moroccan Darija) RTL landing page for a 4-in-1 car emergency tool:
-1000A jump starter, 150 PSI air compressor, USB power bank and LED emergency light.
-Cash on delivery, free shipping across Morocco.
+Arabic (Moroccan Darija) RTL landing page for a kids art pack: a 208-piece colouring
+case, a "الفنان الصغير" certificate printed with the child's name, a wooden frame and
+a colouring booklet. 299 DH, or 549 DH for two (sibling offer). Cash on delivery,
+free shipping across Morocco.
+
+The previous car emergency tool page lives in git history (before this commit).
 
 ## Stack
 
@@ -25,11 +28,13 @@ file to change prices, wording or add real customer reviews.
 
 ## Images
 
-Raw product photos live in `source-images/` (not committed). Regenerate the
-optimized WebP assets in `public/images/` with:
+The source creatives live in `source-images/kids/` (not committed; unzip
+`PACK ENFANTS.zip` there). They have Arabic text baked in, so
+`scripts/prepare-images.mjs` crops each asset out of them by pixel rectangle and
+writes WebP (plus a 480px variant for `srcset`) to `public/images/` and `public/og.jpg`:
 
 ```bash
-npm run images -- source-images
+npm run images
 ```
 
 ## Orders → Google Sheet
@@ -63,6 +68,10 @@ Choosing *New deployment* instead mints a different URL and silently stops
 orders from arriving.
 
 ### Behaviour worth knowing
+
+- One sheet serves both products. Orders for this pack get `KID-` codes, car orders
+  keep `CET-`. The child's name goes to column `O` (`سمية الطفل`), and is also
+  appended to the offer text as a safety net.
 
 - The phone number and order code are stored as text, so leading zeros survive.
 - The same phone and price posted twice within three minutes returns the first

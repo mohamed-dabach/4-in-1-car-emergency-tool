@@ -34,7 +34,7 @@ export function WhatsappInlineLink() {
 
   return (
     <a
-      href={whatsappLink('سلام 👋 عندي سؤال على جهاز الطوارئ 4 فـ1 قبل ما نطلب')}
+      href={whatsappLink('سلام 👋 عندي سؤال على طقم الفنان الصغير قبل ما نطلب')}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackContact('whatsapp')}
@@ -58,16 +58,18 @@ export function WhatsappFallbackLink({
     phone: string;
     city: string;
     address: string;
+    childName: string;
     offer: string;
     total: number;
   };
 }) {
   const message = [
-    'سلام 👋 بغيت نطلب جهاز الطوارئ 4 فـ1',
+    'سلام 👋 بغيت نطلب طقم الفنان الصغير',
     `الاسم: ${order.name}`,
     `الهاتف: ${order.phone}`,
     `المدينة: ${order.city}`,
     `العنوان: ${order.address}`,
+    `سمية الطفل (للشهادة): ${order.childName}`,
     `العرض: ${order.offer} — ${order.total} د.م`,
   ].join('\n');
 

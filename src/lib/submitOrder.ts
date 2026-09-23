@@ -3,6 +3,8 @@ export type OrderPayload = {
   phone: string;
   city: string;
   address: string;
+  /** سمية الطفل (ولا جوج مفرقين بـ /) باش تتطبع على الشهادة */
+  childName: string;
   product: string;
   offer: string;
   quantity: number;
@@ -58,7 +60,7 @@ export async function submitOrder(order: OrderPayload): Promise<OrderResult> {
 
     const data = (await response.json()) as { ok?: boolean; code?: string; error?: string };
     if (!data.ok) return { ok: false, error: data.error || 'rejected' };
-    if (!data.code || !/^CET-\d{6}-\d{3,}$/.test(data.code)) {
+    if (!data.code || !/^[A-Z]{3}-\d{6}-\d{3,}$/.test(data.code)) {
       return { ok: false, error: 'missing_order_code' };
     }
 

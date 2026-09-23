@@ -2,24 +2,27 @@
 
 @theme {
   --font-cairo: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Baloo Bhaijaan 2", "Cairo", ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand-navy: #0b192c;
-  --color-brand-yellow: #ffd700;
-  --color-brand-red: #e63946;
-  --color-brand-green: #10b981;
-  --color-brand-cyan: #00e5ff;
-  
+  /* paper + crayon palette. brand-navy is now the ink colour, not a page background. */
+  --color-brand-navy: #1f1a17;
+  --color-brand-ink: #1f1a17;
+  --color-brand-paper: #fff8ee;
+  --color-brand-cream: #ffefd6;
+  --color-brand-yellow: #ffc83d;
+  --color-brand-red: #f0473b;
+  --color-brand-green: #2e9e5b;
+  --color-brand-cyan: #1f8fe5;
+
   --animate-cta-blink: cta-blink 2s infinite;
 }
 
 @keyframes cta-blink {
   0%, 100% {
-    opacity: 1;
     transform: scale(1);
   }
   50% {
-    opacity: 0.85;
-    transform: scale(1.04);
+    transform: scale(1.035);
   }
 }
 
@@ -31,6 +34,17 @@ html {
 body {
   font-family: var(--font-cairo);
   overflow-x: hidden;
+  background-color: var(--color-brand-paper);
+  color: var(--color-brand-ink);
+}
+
+/* soft paint splashes behind a section — pure CSS, no image request */
+.splash {
+  background-image:
+    radial-gradient(circle at 8% 12%, rgb(255 200 61 / 0.28) 0 70px, transparent 71px),
+    radial-gradient(circle at 94% 30%, rgb(31 143 229 / 0.16) 0 90px, transparent 91px),
+    radial-gradient(circle at 85% 92%, rgb(240 71 59 / 0.14) 0 60px, transparent 61px),
+    radial-gradient(circle at 4% 80%, rgb(46 158 91 / 0.14) 0 50px, transparent 51px);
 }
 
 button,

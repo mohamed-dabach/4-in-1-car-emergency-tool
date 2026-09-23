@@ -1,5 +1,6 @@
 /**
- * Google Apps Script — يستقبل طلبات لاندينگ بيج "جهاز الطوارئ 4 فـ1"
+ * Google Apps Script — يستقبل طلبات لاندينگ بيجات Caryystore (جهاز الطوارئ 4 فـ1
+ * و طقم الفنان الصغير) فنفس الشيت. كل منتج عندو prefix ديال الكود ديالو
  * ويكتبهم فـ Google Sheet.
  *
  * ── التركيب (مرة وحدة) ─────────────────────────────────────────────
@@ -41,11 +42,13 @@ var HEADERS = [
   'الحالة', // L — كتعمرها أنت باليد
   'ملاحظة', // M — كتعمرها أنت باليد
   'ts', // N — الوقت بالميلي ثانية، كنستعملوه باش نعرفو الطلب المكرر
+  'سمية الطفل', // O — للشهادة ديال طقم الفنان الصغير (مورا ts باش الأعمدة القدام ما يتحركوش)
 ];
 
 var COL_CODE = 1;
 var COL_DATE = 2;
 var COL_PHONE = 4;
+var COL_PRODUCT = 7;
 var COL_PRICE = 10;
 var COL_STATUS = 12;
 var COL_TS = 14;
@@ -93,10 +96,15 @@ function sheetOrNull() {
   return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(TAB);
 }
 
-/** كود الطلب: CET-260909-007 — التاريخ + رقم متسلسل ديال النهار */
-function makeOrderCode(sheet, when) {
+/** كل منتج بالـ prefix ديالو: KID- للطقم ديال الدراري، CET- للجهاز ديال الطوموبيل */
+function codePrefix(product) {
+  return String(product || '').indexOf('الفنان') !== -1 ? 'KID' : 'CET';
+}
+
+/** كود الطلب: CET-260909-007 ولا KID-260923-001 — التاريخ + رقم متسلسل ديال النهار لكل منتج */
+function makeOrderCode(sheet, when, product) {
   var stamp = Utilities.formatDate(when, TIMEZONE, 'yyMMdd');
-  var prefix = 'CET-' + stamp + '-';
+  var prefix = codePrefix(product) + '-' + stamp + '-';
   var last = sheet.getLastRow();
   var todayCount = 0;
 
@@ -111,10 +119,10 @@ function makeOrderCode(sheet, when) {
 }
 
 /**
- * نفس الهاتف + نفس الثمن ف آخر 3 دقايق = ضغط جوج مرات على الزر.
+ * نفس الهاتف + نفس الثمن + نفس المنتج ف آخر 3 دقايق = ضغط جوج مرات على الزر.
  * كنرجعو الكود القديم بلا ما نزيدو صف جديد.
  */
-function findRecentDuplicate(sheet, phone, price) {
+function findRecentDuplicate(sheet, phone, price, product) {
   var last = sheet.getLastRow();
   if (last < 2) return null;
 
@@ -132,7 +140,9 @@ function findRecentDuplicate(sheet, phone, price) {
     var ts = Number(row[COL_TS - 1]);
     if (!ts || ts < cutoff) continue;
 
-    if (String(row[COL_PHONE - 1]) === String(phone) && String(row[COL_PRICE - 1]) === String(price)) {
+    if (String(row[COL_PHONE - 1]) === String(phone) &&
+      String(row[COL_PRICE - 1]) === String(price) &&
+      String(row[COL_PRODUCT - 1]) === String(product || '')) {
       return String(row[COL_CODE - 1]);
     }
   }
@@ -219,7 +229,7 @@ function doGet(e) {
 
 /**
  * كيستقبل الطلب من اللاندينگ بيج.
- * الـ body: {name, phone, city, address, product, offer, quantity, total, source}
+ * الـ body: {name, phone, city, address, childName?, product, offer, quantity, total, source}
  */
 function doPost(e) {
   if (!secretOk(e)) return reply({ ok: false, error: 'unauthorized' });
@@ -248,11 +258,11 @@ function doPost(e) {
   if (!lock.tryLock(20000)) return reply({ ok: false, error: 'busy' });
 
   try {
-    var duplicate = findRecentDuplicate(sheet, phone, order.total);
+    var duplicate = findRecentDuplicate(sheet, phone, order.total, order.product);
     if (duplicate) return reply({ ok: true, code: duplicate, duplicate: true });
 
     var now = new Date();
-    var code = makeOrderCode(sheet, now);
+    var code = makeOrderCode(sheet, now, order.product);
 
     sheet.appendRow([
       code,
@@ -269,6 +279,7 @@ function doPost(e) {
       'جديد',
       '',
       now.getTime(),
+      String(order.childName || '').trim(),
     ]);
 
     var row = sheet.getLastRow();
