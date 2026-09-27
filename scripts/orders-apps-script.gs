@@ -18,6 +18,13 @@
  * 6. حط URL فـ Vercel: Settings → Environment Variables →
  *    VITE_ORDERS_WEBHOOK = https://script.google.com/.../exec?key=...
  *
+ * 7. Firestore (مشروع Firebase ديال الطلبات):
+ *    Project Settings → ✅ Show "appsscript.json" manifest file in editor
+ *    → لصق scripts/appsscript.json فـ appsscript.json
+ *    → Run → installSyncTrigger (مرة وحدة، كتطلب Authorization جديد)
+ *    من دابا كل دقيقة syncFromFirestore كيجبد الطلبات الجداد من Firestore
+ *    ويزيدهم هنا. الحساب لي كيشغل السكريبت خاصو يكون عندو صلاحية على المشروع.
+ *
  * ⚠️ ملي تبدل الكود: Deploy → Manage deployments → ✏️ → Version: New version
  * ماشي "New deployment" — هادي كتعطي URL جديد وكتحبس الطلبات.
  *
@@ -73,6 +80,9 @@ var DATE_FORMAT = 'dd/MM/yyyy HH:mm';
 var TEXT_COLUMNS = [COL_CODE, COL_PHONE];
 
 var TIMEZONE = 'Africa/Casablanca';
+
+/** مشروع Firebase لي فيه collection ديال orders */
+var FIREBASE_PROJECT_ID = 'caryystore-orders-7854';
 
 /* ─────────────────────────── helpers ─────────────────────────── */
 
@@ -148,6 +158,33 @@ function findRecentDuplicate(sheet, phone, price, product) {
   }
 
   return null;
+}
+
+/** كيزيد صف ديال الطلب بنفس الترتيب ديال HEADERS — مشترك بين doPost و syncFromFirestore */
+function appendOrderRow(sheet, code, when, order, note) {
+  sheet.appendRow([
+    code,
+    when,
+    String(order.name || '').trim(),
+    String(order.phone || '').trim(),
+    String(order.city || '').trim(),
+    String(order.address || '').trim(),
+    String(order.product || ''),
+    String(order.offer || ''),
+    order.quantity || 1,
+    order.total || '',
+    String(order.source || ''),
+    'جديد',
+    note || '',
+    when.getTime(),
+    String(order.childName || '').trim(),
+  ]);
+
+  var row = sheet.getLastRow();
+  sheet.getRange(row, COL_DATE).setNumberFormat(DATE_FORMAT);
+  TEXT_COLUMNS.forEach(function (col) {
+    sheet.getRange(row, col).setNumberFormat('@');
+  });
 }
 
 /* ─────────────────────────── setup ─────────────────────────── */
@@ -264,29 +301,7 @@ function doPost(e) {
     var now = new Date();
     var code = makeOrderCode(sheet, now, order.product);
 
-    sheet.appendRow([
-      code,
-      now,
-      name,
-      phone,
-      String(order.city || '').trim(),
-      String(order.address || '').trim(),
-      String(order.product || ''),
-      String(order.offer || ''),
-      order.quantity || 1,
-      order.total || '',
-      String(order.source || ''),
-      'جديد',
-      '',
-      now.getTime(),
-      String(order.childName || '').trim(),
-    ]);
-
-    var row = sheet.getLastRow();
-    sheet.getRange(row, COL_DATE).setNumberFormat(DATE_FORMAT);
-    TEXT_COLUMNS.forEach(function (col) {
-      sheet.getRange(row, col).setNumberFormat('@');
-    });
+    appendOrderRow(sheet, code, now, order, '');
 
     return reply({ ok: true, code: code });
   } catch (err) {
@@ -294,6 +309,109 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/* ─────────────────────────── Firestore sync ─────────────────────────── */
+
+function firestoreFetch(path, method, body) {
+  var url = 'https://firestore.googleapis.com/v1/projects/' + FIREBASE_PROJECT_ID + '/databases/(default)/documents' + path;
+  var res = UrlFetchApp.fetch(url, {
+    method: method,
+    contentType: 'application/json',
+    payload: body ? JSON.stringify(body) : undefined,
+    headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() },
+    muteHttpExceptions: true,
+  });
+  if (res.getResponseCode() >= 300) {
+    throw new Error('Firestore ' + res.getResponseCode() + ': ' + res.getContentText().slice(0, 300));
+  }
+  return JSON.parse(res.getContentText() || '{}');
+}
+
+/** كيحول قيمة ديال Firestore REST لقيمة عادية */
+function fsValue(v) {
+  if (!v) return '';
+  if ('stringValue' in v) return v.stringValue;
+  if ('integerValue' in v) return Number(v.integerValue);
+  if ('doubleValue' in v) return v.doubleValue;
+  if ('booleanValue' in v) return v.booleanValue;
+  if ('timestampValue' in v) return new Date(v.timestampValue);
+  return '';
+}
+
+/** الوقت ISO ديال الطلب — كيترتب صحيح كنص حيت كلهم بنفس الشكل (UTC) */
+function createdAtOf(doc) {
+  return (doc.fields && doc.fields.createdAt && doc.fields.createdAt.timestampValue) || '';
+}
+
+/**
+ * كيجبد الطلبات لي synced=false من Firestore، كيزيدهم للشيت، ومن بعد كيديرلهم synced=true.
+ * إلا الكود ديجا كاين فالشيت (مثلا طاح السكريبت قبل ما يعلّم) ما كيعاودش يزيدو.
+ * كيخدم بالـ trigger ديال كل دقيقة لي كيركبو installSyncTrigger.
+ */
+function syncFromFirestore() {
+  var sheet = sheetOrNull();
+  if (!sheet) throw new Error('التاب "' + TAB + '" ماكاينش — شغّل setupSheet الأول');
+
+  // نفس القفل ديال doPost باش ما يتخلطوش الصفوف
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return;
+
+  try {
+    var results = firestoreFetch(':runQuery', 'post', {
+      structuredQuery: {
+        from: [{ collectionId: 'orders' }],
+        where: { fieldFilter: { field: { fieldPath: 'synced' }, op: 'EQUAL', value: { booleanValue: false } } },
+        limit: 100,
+      },
+    });
+
+    var docs = results
+      .filter(function (r) { return r.document; })
+      .map(function (r) { return r.document; })
+      .sort(function (a, b) { return createdAtOf(a).localeCompare(createdAtOf(b)); });
+    if (!docs.length) return;
+
+    var existing = {};
+    var last = sheet.getLastRow();
+    if (last > 1) {
+      var lookback = Math.min(2000, last - 1);
+      sheet.getRange(last - lookback + 1, COL_CODE, lookback, 1).getValues().forEach(function (r) {
+        existing[String(r[0])] = true;
+      });
+    }
+
+    docs.forEach(function (doc) {
+      var f = doc.fields || {};
+      var order = {};
+      Object.keys(f).forEach(function (key) { order[key] = fsValue(f[key]); });
+      var code = String(order.code || doc.name.split('/').pop());
+      var when = order.createdAt instanceof Date ? order.createdAt : new Date();
+
+      if (!existing[code]) {
+        // ما كنحيدوش المكرر: الكليان شاف هاد الكود، فكنزيدوه ونعلمو عليه فالملاحظة
+        var duplicate = findRecentDuplicate(sheet, order.phone, order.total, order.product);
+        appendOrderRow(sheet, code, when, order, duplicate ? 'مكرر؟ ' + duplicate : '');
+        existing[code] = true;
+      }
+
+      firestoreFetch('/orders/' + encodeURIComponent(code) + '?updateMask.fieldPaths=synced&currentDocument.exists=true', 'patch', {
+        fields: { synced: { booleanValue: true } },
+      });
+    });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/** شغّلها مرة وحدة: كتركب trigger كل دقيقة وكتدير أول sync دابا */
+function installSyncTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'syncFromFirestore') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('syncFromFirestore').timeBased().everyMinutes(1).create();
+  syncFromFirestore();
+  SpreadsheetApp.getActiveSpreadsheet().toast('الطلبات ديال Firestore غادي يدخلو هنا كل دقيقة.', 'تم', 8);
 }
 
 /**

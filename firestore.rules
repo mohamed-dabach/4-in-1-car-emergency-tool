@@ -1,0 +1,41 @@
+rules_version = '2';
+
+// الطلبات كتجي من اللاندينگ بيج بلا تسجيل دخول، فالزائر يقدر غير يخلق طلب جديد
+// بالشكل الصحيح. القراية والتعديل كيدوزو غير من Apps Script ديال الشيت (IAM ديال المالك).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /orders/{orderId} {
+      function str(field, min, max) {
+        return request.resource.data[field] is string
+          && request.resource.data[field].size() >= min
+          && request.resource.data[field].size() <= max;
+      }
+
+      allow create: if orderId.matches('^[A-Z]{3}-[0-9]{6}-[0-9]{4}$')
+        && request.resource.data.keys().hasOnly(['code', 'name', 'phone', 'city', 'address', 'childName', 'product', 'offer', 'quantity', 'total', 'source', 'synced', 'createdAt'])
+        && request.resource.data.keys().hasAll(['code', 'name', 'phone', 'city', 'address', 'childName', 'product', 'offer', 'quantity', 'total', 'source', 'synced', 'createdAt'])
+        && request.resource.data.code == orderId
+        && str('name', 1, 120)
+        && str('phone', 9, 16)
+        && request.resource.data.phone.matches('^(\\+?212|0)[5-7][0-9]{8}$')
+        && str('city', 1, 80)
+        && str('address', 1, 300)
+        && str('childName', 0, 120)
+        && str('product', 1, 120)
+        && str('offer', 1, 300)
+        && str('source', 0, 500)
+        && request.resource.data.quantity is int
+        && request.resource.data.quantity >= 1 && request.resource.data.quantity <= 10
+        && request.resource.data.total is number
+        && request.resource.data.total > 0 && request.resource.data.total <= 10000
+        && request.resource.data.synced == false
+        && request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -37,7 +37,25 @@ writes WebP (plus a 480px variant for `srcset`) to `public/images/` and `public/
 npm run images
 ```
 
-## Orders → Google Sheet
+## Orders → Firestore → Google Sheet
+
+Orders are written to Firestore first (project `caryystore-orders-7854`,
+collection `orders`) straight from the browser via the REST API. `firestore.rules`
+only lets visitors *create* a well-formed order; nobody can read, edit or delete
+through the public key. Deploy rule changes with the Firebase console or the
+Rules API.
+
+The Apps Script bound to the orders sheet pulls new orders (`synced == false`)
+every minute with `syncFromFirestore`, appends them, then flags them
+`synced: true`. One-time setup: enable the `appsscript.json` manifest in the
+script's Project Settings, paste [`scripts/appsscript.json`](scripts/appsscript.json),
+then run **`installSyncTrigger`**. The Google account that owns the script needs
+access to the Firebase project.
+
+Vercel env vars: `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_API_KEY`. If Firestore
+fails, the page falls back to the Apps Script webhook below (`VITE_ORDERS_WEBHOOK`).
+
+## Orders → Google Sheet (fallback webhook)
 
 Orders submitted on the page are POSTed to a Google Apps Script web app that
 appends one row per order to a spreadsheet.
