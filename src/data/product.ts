@@ -143,7 +143,11 @@ export const trustBadges = ['التوصيل فابور لكل المدن', 'ال
 
 /**
  * سكرينات حقيقية ديال الواتساب من عند الكليان (بلا نمرة ولا تصويرة ديال الوليد).
- * حط الصور ف public/proof/ (webp، عرض 640) وزيد المسار هنا، مثلا '/proof/wa-1.webp'.
+ * حط الصور ف public/proof/ (webp، عرض 640) وزيد المسار والأبعاد ديالها هنا.
  * القسم كيبان غير إلا كانت شي سكرينة فهاد الليستة.
  */
-export const whatsappProofs: string[] = [];
+export const whatsappProofs: { src: string; width: number; height: number }[] = [
+  { src: '/proof/wa-1.webp', width: 640, height: 1371 },
+  { src: '/proof/wa-2.webp', width: 540, height: 1156 },
+  { src: '/proof/wa-3.webp', width: 640, height: 1138 },
+];

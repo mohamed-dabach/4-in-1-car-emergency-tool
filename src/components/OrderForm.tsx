@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Award, CheckCircle2, LoaderCircle, PackageSearch, ShoppingCart, Truck, Wallet } from 'lucide-react';
 import { offers, product, type Offer } from '../data/product';
 import { whatsappEnabled, whatsappLink } from '../data/contact';
@@ -25,6 +25,17 @@ export default function OrderForm() {
   const [offer, setOffer] = useState<Offer>(offers[0]);
   const [phoneError, setPhoneError] = useState('');
   const phoneRef = useRef<HTMLInputElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  /* الاستمارة طويلة وكتبدل ببطاقة قصيرة، فالكليان كيبقى لتحت وما كيشوفش رسالة النجاح ولا زر الواتساب.
+     كنطلعوه ليها ونحطو الفوكوس عليها باش قارئ الشاشة يقراها. */
+  useEffect(() => {
+    if (!isSuccess) return;
+    const el = successRef.current;
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [isSuccess]);
 
   const selectOffer = (next: Offer) => { setOffer(next); trackOfferSelected({ quantity: next.qty, value: next.price }); };
   const validatePhone = (value: string) => {
@@ -65,7 +76,7 @@ export default function OrderForm() {
         </div>
         <div className="px-4 py-7 sm:px-10 sm:py-9">
           {isSuccess ? (
-            <div className="py-6 text-center" aria-live="polite">
+            <div ref={successRef} tabIndex={-1} className="scroll-mt-4 py-6 text-center outline-none" aria-live="polite">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-700"><CheckCircle2 className="h-9 w-9" /></div>
               <h2 className="font-display text-2xl font-extrabold">دازت لاكوموند ديالك بنجاح 🎉</h2>
               <p data-clarity-mask="true" className="mt-2 text-base leading-7 text-brand-ink/70">غادي نعيطو ليك فالتليفون باش نأكدو لاكوموند والعنوان، ونتأكدو حتى من السمية لي غانطبعو فالشهادة{childName ? <>: <b className="text-brand-ink">{childName}</b></> : null}.</p>
