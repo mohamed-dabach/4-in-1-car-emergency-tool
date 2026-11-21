@@ -10,14 +10,12 @@ const HERO_SIZES = '(min-width: 1024px) 560px, (min-width: 640px) 448px, 100vw';
 
 type VariantProps = { variant: Variant; onVariantChange: (next: Variant) => void };
 
-/** البوطونات + التصويرة كاملة بلا قص. فالتيليفون كتاخد العرض كامل د الشاشة. */
+/** التصويرة كاملة بلا قص (فالتيليفون كتاخد العرض كامل د الشاشة)، والبوطونات تحتها. */
 function HeroVisual({ variant, onVariantChange, name }: VariantProps & { name: string }) {
   const v = variants[variant];
   return (
     <>
-      <p className="mb-2 text-center text-sm font-black text-brand-ink lg:text-right">ختار النسخة لي بغيتي:</p>
-      <VariantPicker name={name} value={variant} onChange={onVariantChange} legend="ختار النسخة: للولد ولا للبنت" className="mx-auto max-w-md lg:mx-0 lg:max-w-none" />
-      <ImageLightbox src={v.image} alt={v.alt} className="-mx-4 mt-3 sm:mx-auto sm:max-w-md lg:max-w-none">
+      <ImageLightbox src={v.image} alt={v.alt} className="-mx-4 sm:mx-auto sm:max-w-md lg:max-w-none">
         <img
           src={v.image}
           srcSet={v.srcSet}
@@ -30,6 +28,8 @@ function HeroVisual({ variant, onVariantChange, name }: VariantProps & { name: s
           className="aspect-[896/1200] w-full object-contain sm:rounded-3xl sm:shadow-[0_18px_40px_-18px_rgba(31,26,23,0.45)] sm:ring-4 sm:ring-white"
         />
       </ImageLightbox>
+      <p className="mt-3 mb-2 text-center text-sm font-black text-brand-ink lg:text-right">ختار النسخة لي بغيتي:</p>
+      <VariantPicker name={name} value={variant} onChange={onVariantChange} legend="ختار النسخة: للولد ولا للبنت" className="mx-auto max-w-md lg:mx-0 lg:max-w-none" />
     </>
   );
 }
@@ -55,9 +55,6 @@ export default function Hero({ variant, onVariantChange }: VariantProps) {
             ودّع إدمان التيليفون…
             <span className="block text-brand-red">وطلّع موهبة وليدك فالدار!</span>
           </h1>
-          <p className="mx-auto mt-2 max-w-xl text-[15px] leading-7 font-semibold text-brand-ink/75 sm:text-lg lg:mx-0">
-            208 بياسة د الألوان + <b className="text-brand-ink">شهادة بسمية وليدك</b> + كادر د الخشب + كتيب د التلوين
-          </p>
 
           <div className="mt-3 lg:hidden">
             <HeroVisual name="hero-variant-mobile" variant={variant} onVariantChange={onVariantChange} />
