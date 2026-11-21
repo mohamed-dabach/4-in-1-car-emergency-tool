@@ -69,8 +69,8 @@ export default function Hero({ variant, onVariantChange }: VariantProps) {
               </span>
               <span className="self-center rounded-full bg-brand-green px-2.5 py-0.5 text-xs text-white">التوصيل فابور</span>
             </div>
-            <CtaButton className="w-full max-w-md sm:w-full" location="hero" label="اطلب دابا وخلّص حتى يوصلك">
-              اطلب دابا وخلّص حتى يوصلك
+            <CtaButton className="w-full max-w-md sm:w-full" location="hero" label="اطلب الآن">
+              اطلب الآن
             </CtaButton>
           </div>
           <ul className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs font-bold text-brand-ink/70 lg:justify-start">
