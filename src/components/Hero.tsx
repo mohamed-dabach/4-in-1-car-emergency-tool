@@ -1,27 +1,51 @@
+import { useEffect } from 'react';
 import { Clock3, PackageSearch, RotateCcw } from 'lucide-react';
-import { product } from '../data/product';
+import { product, variants, type Variant } from '../data/product';
 import { CtaButton } from './ui';
 import ImageLightbox from './ImageLightbox';
+import VariantPicker from './VariantPicker';
 
-function HeroImage() {
+/** نفس القيمة لي ف index.html (preload) باش التصويرة ما تتحملش جوج مرات */
+const HERO_SIZES = '(min-width: 1024px) 560px, (min-width: 640px) 448px, 100vw';
+
+type VariantProps = { variant: Variant; onVariantChange: (next: Variant) => void };
+
+/** البوطونات + التصويرة كاملة بلا قص. فالتيليفون كتاخد العرض كامل د الشاشة. */
+function HeroVisual({ variant, onVariantChange, name }: VariantProps & { name: string }) {
+  const v = variants[variant];
   return (
-    <ImageLightbox src="/images/hero-pack.webp" alt="محتوى طقم الفنان الصغير">
-      <img
-        src="/images/hero-pack.webp"
-        srcSet="/images/hero-pack-480.webp 480w, /images/hero-pack.webp 768w"
-        sizes="(min-width: 1024px) 560px, 100vw"
-        width={768}
-        height={830}
-        alt="طقم الفنان الصغير: حقيبة 208 قطعة، شهادة باسم الطفل فكادر خشبي وكتيب التلوين"
-        fetchPriority="high"
-        decoding="async"
-        className="aspect-[768/830] w-full rounded-3xl object-cover shadow-[0_18px_40px_-18px_rgba(31,26,23,0.45)] ring-4 ring-white"
-      />
-    </ImageLightbox>
+    <>
+      <p className="mb-2 text-center text-sm font-black text-brand-ink lg:text-right">ختار النسخة لي بغيتي:</p>
+      <VariantPicker name={name} value={variant} onChange={onVariantChange} legend="ختار النسخة: للولد ولا للبنت" className="mx-auto max-w-md lg:mx-0 lg:max-w-none" />
+      <ImageLightbox src={v.image} alt={v.alt} className="-mx-4 mt-3 sm:mx-auto sm:max-w-md lg:max-w-none">
+        <img
+          src={v.image}
+          srcSet={v.srcSet}
+          sizes={HERO_SIZES}
+          width={896}
+          height={1200}
+          alt={v.alt}
+          fetchPriority="high"
+          decoding="async"
+          className="aspect-[896/1200] w-full object-contain sm:rounded-3xl sm:shadow-[0_18px_40px_-18px_rgba(31,26,23,0.45)] sm:ring-4 sm:ring-white"
+        />
+      </ImageLightbox>
+    </>
   );
 }
 
-export default function Hero() {
+export default function Hero({ variant, onVariantChange }: VariantProps) {
+  // النسخة الأخرى كتتحمل فالخلفية باش ملي يكليكي عليها تبان دغيا
+  useEffect(() => {
+    const other = variants[variant === 'boy' ? 'girl' : 'boy'];
+    const timer = window.setTimeout(() => {
+      const img = new Image();
+      img.sizes = HERO_SIZES;
+      img.srcset = other.srcSet;
+    }, 2500);
+    return () => window.clearTimeout(timer);
+  }, []); // غير مرة وحدة ملي كتحل الصفحة
+
   return (
     <header data-analytics-section="hero" className="splash relative overflow-hidden px-4 pt-4 pb-8 sm:px-6 sm:py-10 lg:py-14">
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-4 lg:grid-cols-2 lg:gap-14">
@@ -35,8 +59,8 @@ export default function Hero() {
             208 بياسة د الألوان + <b className="text-brand-ink">شهادة بسمية وليدك</b> + كادر د الخشب + كتيب د التلوين
           </p>
 
-          <div className="mx-auto mt-3 w-full max-w-md lg:hidden">
-            <HeroImage />
+          <div className="mt-3 lg:hidden">
+            <HeroVisual name="hero-variant-mobile" variant={variant} onVariantChange={onVariantChange} />
           </div>
 
           <div className="mt-4 flex flex-col items-center gap-3 lg:items-start">
@@ -60,7 +84,7 @@ export default function Hero() {
         </div>
 
         <div className="hidden lg:block">
-          <HeroImage />
+          <HeroVisual name="hero-variant-desktop" variant={variant} onVariantChange={onVariantChange} />
         </div>
       </div>
     </header>

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Award, CheckCircle2, LoaderCircle, PackageSearch, ShoppingCart, Truck, Wallet } from 'lucide-react';
-import { offers, product, type Offer } from '../data/product';
+import { offers, product, variants, type Offer, type Variant } from '../data/product';
 import { whatsappEnabled, whatsappLink } from '../data/contact';
 import { WhatsappFallbackLink, WhatsappIcon, WhatsappInlineLink } from './WhatsappButton';
 import OfferPicker from './OfferPicker';
+import VariantPicker from './VariantPicker';
 import { orderSource, submitOrder, type OrderPayload } from '../lib/submitOrder';
 import { setAdvancedMatching, trackContact, trackFormError, trackFormStarted, trackFormSubmitAttempt, trackOfferSelected, trackPurchase } from '../lib/metaEvents';
 
@@ -16,13 +17,15 @@ function Field({ label, error, children }: { label: ReactNode; error?: string; c
 
 function normalizePhone(value: string) { return value.replace(/[\s\-().]/g, ''); }
 
-export default function OrderForm() {
+export default function OrderForm({ variant, onVariantChange }: { variant: Variant; onVariantChange: (next: Variant) => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderCode, setOrderCode] = useState<string | null>(null);
   const [childName, setChildName] = useState('');
   const [failed, setFailed] = useState<OrderPayload | null>(null);
   const [offer, setOffer] = useState<Offer>(offers[0]);
+  /** النسخة ديال الوليد الثاني فعرض الخوت (الأول هو لي مختار فالهيرو) */
+  const [variant2, setVariant2] = useState<Variant>(variant);
   const [phoneError, setPhoneError] = useState('');
   const phoneRef = useRef<HTMLInputElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
@@ -37,7 +40,11 @@ export default function OrderForm() {
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [isSuccess]);
 
-  const selectOffer = (next: Offer) => { setOffer(next); trackOfferSelected({ quantity: next.qty, value: next.price }); };
+  const selectOffer = (next: Offer) => {
+    if (next.qty === 2 && offer.qty !== 2) setVariant2(variant);
+    setOffer(next);
+    trackOfferSelected({ quantity: next.qty, value: next.price });
+  };
   const validatePhone = (value: string) => {
     const valid = PHONE_PATTERN.test(normalizePhone(value));
     setPhoneError(valid ? '' : 'دخل رقم تليفون صحيح، مثلا 0612345678');
@@ -54,7 +61,9 @@ export default function OrderForm() {
     // جوج سميات فعرض الإخوة، مفرقين بـ " / " فعمود واحد فالشيت.
     // السمية كتمشي حتى مع العرض باش ما تضيعش إلا كان السكريبت ديال الشيت باقي ما تبدلش.
     const children = [data.get('child1'), data.get('child2')].map((v) => String(v ?? '').trim()).filter(Boolean).join(' / ');
-    const order: OrderPayload = { product: product.name, offer: `${offer.title} | الطفل: ${children}`, name: String(data.get('name') ?? '').trim(), phone, city: String(data.get('city') ?? '').trim(), address: String(data.get('address') ?? '').trim(), childName: children, quantity: offer.qty, total: offer.price, source: orderSource() };
+    // النسخة (زرقا ولا وردية) كتمشي فخانة العرض: الشيت والـ rules ما كيقبلوش خانة جديدة
+    const packs = (offer.qty === 2 ? [variant, variant2] : [variant]).map((v) => variants[v].orderLabel).join(' / ');
+    const order: OrderPayload = { product: product.name, offer: `${offer.title} | النسخة: ${packs} | الطفل: ${children}`, name: String(data.get('name') ?? '').trim(), phone, city: String(data.get('city') ?? '').trim(), address: String(data.get('address') ?? '').trim(), childName: children, quantity: offer.qty, total: offer.price, source: orderSource() };
     setIsSubmitting(true);
     setFailed(null);
     setAdvancedMatching({ fullName: order.name, phone: order.phone, city: order.city });
@@ -102,8 +111,16 @@ export default function OrderForm() {
                 <div className="rounded-2xl border-2 border-brand-yellow bg-brand-yellow/15 p-3.5">
                   <p className="mb-2 flex items-center gap-1.5 text-sm font-black text-brand-ink"><Award className="h-5 w-5 text-brand-red" /> 🎨 سمية وليدك (غادي نطبعوها فالشهادة فابور)</p>
                   <div className={`grid gap-3 ${offer.qty === 2 ? 'sm:grid-cols-2' : ''}`}>
-                    <Field label={<span className="sr-only">سمية الطفل</span>}><input name="child1" type="text" required autoComplete="off" placeholder={offer.qty === 2 ? 'سمية الوليد الأول' : 'مثلا: ريان'} className={inputClass} /></Field>
-                    {offer.qty === 2 ? <Field label={<span className="sr-only">سمية الوليد الثاني</span>}><input name="child2" type="text" required autoComplete="off" placeholder="سمية الوليد الثاني" className={inputClass} /></Field> : null}
+                    <div className="space-y-2">
+                      <Field label={<span className="sr-only">سمية الطفل</span>}><input name="child1" type="text" required autoComplete="off" placeholder={offer.qty === 2 ? 'سمية الوليد الأول' : 'مثلا: ريان'} className={inputClass} /></Field>
+                      <VariantPicker name="variant1" value={variant} onChange={onVariantChange} size="sm" legend={offer.qty === 2 ? 'النسخة ديال الوليد الأول: ولد ولا بنت' : 'النسخة: للولد ولا للبنت'} />
+                    </div>
+                    {offer.qty === 2 ? (
+                      <div className="space-y-2">
+                        <Field label={<span className="sr-only">سمية الوليد الثاني</span>}><input name="child2" type="text" required autoComplete="off" placeholder="سمية الوليد الثاني" className={inputClass} /></Field>
+                        <VariantPicker name="variant2" value={variant2} onChange={setVariant2} size="sm" legend="النسخة ديال الوليد الثاني: ولد ولا بنت" />
+                      </div>
+                    ) : null}
                   </div>
                 </div>
                 <button type="submit" data-cta="" disabled={isSubmitting} className="flex min-h-14 w-full touch-manipulation items-center justify-center gap-2 rounded-2xl bg-brand-red px-5 text-xl font-black text-white shadow-[0_12px_28px_-12px_rgba(240,71,59,0.9)] transition hover:brightness-105 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand-cyan">{isSubmitting ? <><LoaderCircle className="h-6 w-6 animate-spin" /> كنسجلو الطلب ديالك...</> : <><ShoppingCart className="h-6 w-6" /> كليكي هنا باش تأكد لاكوموند</>}</button>

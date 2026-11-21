@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AnnounceBar from './components/AnnounceBar';
 import Faq from './components/Faq';
 import Footer from './components/Footer';
@@ -11,7 +11,7 @@ import Reviews from './components/Reviews';
 import StickyCta from './components/StickyCta';
 import WhatsappButton from './components/WhatsappButton';
 import WhatsappProof from './components/WhatsappProof';
-import { product } from './data/product';
+import { initialVariant, product, type Variant } from './data/product';
 import { trackViewContent } from './lib/metaEvents';
 import { useScrollDepth, useTimeOnPage, useExitIntent, useSectionViews } from './lib/useEngagement';
 
@@ -21,6 +21,9 @@ export default function App() {
   useExitIntent();
   useSectionViews();
 
+  // ولد ولا بنت: كيتختار فالهيرو وكيمشي مع الطلب باش يتصيفط الطقم الصحيح
+  const [variant, setVariant] = useState<Variant>(initialVariant);
+
   useEffect(() => {
     trackViewContent(product.price);
   }, []);
@@ -29,12 +32,12 @@ export default function App() {
     <div className="min-h-screen overflow-x-hidden bg-brand-paper text-brand-ink selection:bg-brand-yellow selection:text-brand-ink">
       <AnnounceBar />
       <main>
-        <Hero />
+        <Hero variant={variant} onVariantChange={setVariant} />
         <ProblemSolution />
         <PackContents />
         <Occasions />
         <WhatsappProof />
-        <OrderForm />
+        <OrderForm variant={variant} onVariantChange={setVariant} />
         <Reviews />
         <Faq />
       </main>

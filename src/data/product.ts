@@ -9,6 +9,34 @@ export const product = {
   currency: 'د.م',
 };
 
+/** جوج نسخ د الطقم: زرقا للولد ووردية للبنت (الماليطا والشهادة مبدلين) */
+export type Variant = 'boy' | 'girl';
+
+export const variants: Record<Variant, { label: string; emoji: string; orderLabel: string; image: string; srcSet: string; alt: string }> = {
+  boy: {
+    label: 'للولد',
+    emoji: '👦',
+    orderLabel: 'زرقا (ولد)',
+    image: '/images/hero-boy.webp',
+    srcSet: '/images/hero-boy-480.webp 480w, /images/hero-boy-720.webp 720w, /images/hero-boy.webp 896w',
+    alt: 'طقم الفنان الصغير، النسخة الزرقا للولد: حقيبة 208 قطعة، شهادة باسم الطفل فكادر خشبي وكتيب التلوين',
+  },
+  girl: {
+    label: 'للبنت',
+    emoji: '👧',
+    orderLabel: 'وردية (بنت)',
+    image: '/images/hero-girl.webp',
+    srcSet: '/images/hero-girl-480.webp 480w, /images/hero-girl-720.webp 720w, /images/hero-girl.webp 896w',
+    alt: 'طقم الفنانة الصغيرة، النسخة الوردية للبنت: حقيبة 208 قطعة، شهادة باسم البنت فكادر خشبي وكتيب التلوين',
+  },
+};
+
+/** النسخة الأولى كتجي من الرابط (?v=girl) باش الإعلان ديال البنات يحل الصفحة نيشان على الوردية */
+export function initialVariant(): Variant {
+  if (typeof window === 'undefined') return 'boy';
+  return new URLSearchParams(window.location.search).get('v') === 'girl' ? 'girl' : 'boy';
+}
+
 export type Offer = {
   qty: number;
   price: number;

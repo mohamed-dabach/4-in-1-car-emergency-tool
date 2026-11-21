@@ -18,8 +18,11 @@ const CONTENTS = 'Gemini_Generated_Image_n6bu6en6bu6en6bu.png'; // 768x1376, pac
 const PROBLEM = '1111.png'; // 1254x1254
 const SOLUTION = '112.png'; // 1254x1254
 
-/** name → [source file, crop {left, top, width, height}, output widths] */
+/** name → [source file, crop {left, top, width, height} or null for the whole image, output widths] */
 const CROPS = {
+  // hero posters, shown whole (boy/girl switch in the hero)
+  'hero-boy': ['hero-boy.jpeg', null, [480, 720, 896]], // 896x1200
+  'hero-girl': ['hero-girl.jpeg', null, [480, 720, 896]], // 896x1200
   'hero-pack': [HERO, { left: 0, top: 395, width: 768, height: 830 }, [480, 768]],
   'pack-case': [HERO, { left: 175, top: 730, width: 360, height: 280 }, [360]],
   'pack-certificate': [HERO, { left: 405, top: 580, width: 363, height: 320 }, [360]],
@@ -47,8 +50,9 @@ for (const [name, [source, crop, widths]] of Object.entries(CROPS)) {
   for (const [i, width] of widths.entries()) {
     // the largest width keeps the plain name, smaller ones get a -<width> suffix for srcset
     const file = i === widths.length - 1 ? `${name}.webp` : `${name}-${width}.webp`;
-    await sharp(from)
-      .extract(crop)
+    const image = sharp(from);
+    if (crop) image.extract(crop);
+    await image
       .resize({ width, withoutEnlargement: true })
       .webp({ quality: 78, effort: 6 })
       .toFile(path.join(OUT, file));
